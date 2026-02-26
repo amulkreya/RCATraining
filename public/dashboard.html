@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Revenue Cloud Advance - Secure Dashboard</title>
 
 <style>
@@ -11,11 +11,8 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f4f6fb;
   user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 
-/* HEADER */
 .header {
   background: linear-gradient(135deg, #0b3d91, #1f6feb);
   color: white;
@@ -37,7 +34,6 @@ body {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .logout-btn:hover {
@@ -57,18 +53,6 @@ body {
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   margin-bottom: 30px;
   text-align: center;
-}
-
-.welcome-card h2 {
-  margin: 0;
-  color: #0b3d91;
-  font-size: 26px;
-}
-
-.subtitle {
-  color: #555;
-  margin-top: 10px;
-  font-size: 15px;
 }
 
 .video-section {
@@ -117,21 +101,19 @@ iframe {
   width: 100%;
   height: 100%;
   border: none;
-  pointer-events: auto;
 }
 
 .footer {
   text-align: center;
   padding: 20px;
-  color: #777;
   font-size: 13px;
+  color: #777;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
   <button class="logout-btn" onclick="logout()">Logout</button>
@@ -140,70 +122,71 @@ iframe {
 <div class="container">
 
   <div class="welcome-card">
-    <h2>🎓 Welcome to RCA Course</h2>
-    <p class="subtitle">
-      Authorized Access Only | Recording & Download Strictly Prohibited
-    </p>
+    <h2>🎓 Welcome to RCA Training</h2>
+    <p>Authorized Access Only | Downloads & Recording Prohibited</p>
   </div>
-
-  <script>
-    const videos = [
-      { day: "Day 1", id: "1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79" },
-      { day: "Day 2", id: "1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR" },
-      { day: "Day 3", id: "1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C" }
-    ];
-  </script>
 
   <div id="videoContainer"></div>
 
 </div>
 
 <div class="footer">
-  © 2026 Kreya IT Consulting Pvt Ltd | Protected RCA Portal
+  © 2026 Kreya IT Consulting Pvt Ltd
 </div>
 
 <script>
-/* ================= LOAD VIDEOS ================= */
+
+// ================= VIDEO LIST =================
+const videos = [
+  { day: "Day 1", id: "1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79" },
+  { day: "Day 2", id: "1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR" },
+  { day: "Day 3", id: "1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C" }
+];
+
 const container = document.getElementById("videoContainer");
 
 videos.forEach(v => {
   container.innerHTML += `
-  <div class="video-section">
-    <div class="video-title">📺 ${v.day} – RCA Training</div>
-    <div class="video-wrapper">
-      <div class="top-overlay"></div>
-      <div class="bottom-overlay"></div>
-      <iframe
-        src="https://drive.google.com/file/d/${v.id}/preview"
-        sandbox="allow-same-origin allow-scripts allow-presentation"
-        allow="autoplay"
-        referrerpolicy="no-referrer">
-      </iframe>
+    <div class="video-section">
+      <div class="video-title">${v.day} - RCA Training</div>
+      <div class="video-wrapper">
+        <div class="top-overlay"></div>
+        <div class="bottom-overlay"></div>
+        <iframe
+          src="https://drive.google.com/file/d/${v.id}/preview"
+          sandbox="allow-same-origin allow-scripts allow-presentation"
+          allow="autoplay">
+        </iframe>
+      </div>
     </div>
-  </div>`;
+  `;
 });
 
-/* ================= LOGOUT ================= */
+// ================= LOGOUT =================
 function logout() {
-  fetch("/logout").finally(() => {
-    window.location.href = "/login.html";
-  });
+  fetch("/logout")
+    .then(() => {
+      window.location.href = "/login.html";
+    })
+    .catch(() => {
+      window.location.href = "/login.html";
+    });
 }
 
-/* ================= SECURITY HARDENING ================= */
+// ================= SECURITY =================
 
-// Disable Right Click
+// Disable right click
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// Disable Copy, Paste, Cut
-document.addEventListener("copy", e => e.preventDefault());
-document.addEventListener("paste", e => e.preventDefault());
-document.addEventListener("cut", e => e.preventDefault());
+// Disable copy / paste / cut
+["copy", "paste", "cut"].forEach(evt =>
+  document.addEventListener(evt, e => e.preventDefault())
+);
 
-// Disable Drag
+// Disable drag
 document.addEventListener("dragstart", e => e.preventDefault());
 
-// Disable DevTools & Save & Print
+// Disable DevTools + Save + Print
 document.addEventListener("keydown", function(e) {
   if (
     e.key === "F12" ||
@@ -215,29 +198,18 @@ document.addEventListener("keydown", function(e) {
   }
 });
 
-// Disable Back Button
+// Disable back button
 history.pushState(null, null, location.href);
 window.onpopstate = function () {
   history.go(1);
 };
 
-// Logout if user switches tab
-document.addEventListener("visibilitychange", function() {
-  if (document.hidden) {
-    logout();
-  }
-});
-
-// Prevent Multiple Tabs
-if (localStorage.getItem("activeTab")) {
-  alert("Multiple sessions detected. Logging out.");
+// Auto logout after 20 minutes
+setTimeout(() => {
+  alert("Session expired.");
   logout();
-} else {
-  localStorage.setItem("activeTab", "true");
-  window.addEventListener("beforeunload", () => {
-    localStorage.removeItem("activeTab");
-  });
-}
+}, 20 * 60 * 1000);
+
 </script>
 
 </body>
