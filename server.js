@@ -5,33 +5,24 @@ require('dotenv').config();
 
 const app = express();
 
-// ===============================
-// DATABASE CONNECTION
-// ===============================
+// ================= DATABASE =================
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false }
 });
 
-// ===============================
-// MIDDLEWARE
-// ===============================
+// ================= MIDDLEWARE =================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
 app.use(session({
-  secret: 'rcaTrainingSecret',
+  secret: 'rcaSecret',
   resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false }
+  saveUninitialized: false
 }));
 
-// ===============================
-// AUTH MIDDLEWARE
-// ===============================
+// ================= AUTH MIDDLEWARE =================
 function requireLogin(req, res, next) {
   if (!req.session.user) {
     return res.redirect('/login.html');
@@ -46,67 +37,90 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ===============================
-// LOGIN ROUTE
-// ===============================
+// ================= LOGIN =================
 app.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.send("Email and Password required.");
-    }
+  const result = await pool.query(
+    "SELECT * FROM UserInformation WHERE email=$1",
+    [email]
+  );
 
-    const result = await pool.query(
-      "SELECT * FROM UserInformation WHERE email = $1",
-      [email]
-    );
+  if (result.rows.length === 0)
+    return res.send("User not found");
 
-    if (result.rows.length === 0) {
-      return res.send("User not found.");
-    }
+  const user = result.rows[0];
 
-    const user = result.rows[0];
+  if (!user.isactive)
+    return res.send("User inactive");
 
-    if (!user.isactive) {
-      return res.send("User is inactive. Contact Admin.");
-    }
+  if (password !== user.password)
+    return res.send("Invalid password");
 
-    if (password !== user.password) {
-      return res.send("Invalid password.");
-    }
+  req.session.user = user;
 
-    req.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    };
-
-    if (user.role === "Admin") {
-      return res.redirect('/admin.html');
-    } else {
-      return res.redirect('/dashboard.html');
-    }
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server Error");
+  if (user.role === 'Admin') {
+    return res.redirect('/admin.html');
+  } else {
+    return res.redirect('/dashboard.html');
   }
 });
 
-// ===============================
-// LOGOUT
-// ===============================
+// ================= LOGOUT =================
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login.html');
   });
 });
 
-// ===============================
-// PROTECTED ROUTES
-// ===============================
+// ================= GET ALL STUDENTS =================
+app.get('/api/students', requireAdmin, async (req, res) => {
+  const result = await pool.query(
+    "SELECT id,name,email,mobile,isactive,sessionid FROM UserInformation WHERE role='Student' ORDER BY id DESC"
+  );
+  res.json(result.rows);
+});
+
+// ================= CREATE STUDENT =================
+app.post('/api/students', requireAdmin, async (req, res) => {
+  const { name, email, mobile, password, sessionid } = req.body;
+
+  await pool.query(
+    `INSERT INTO UserInformation
+     (name,email,mobile,password,role,isactive,sessionid)
+     VALUES($1,$2,$3,$4,'Student',true,$5)`,
+    [name,email,mobile,password,sessionid]
+  );
+
+  res.json({ message: "Student Created" });
+});
+
+// ================= TOGGLE ACTIVE =================
+app.put('/api/students/:id/toggle', requireAdmin, async (req, res) => {
+  const id = req.params.id;
+
+  await pool.query(
+    "UPDATE UserInformation SET isactive = NOT isactive WHERE id=$1",
+    [id]
+  );
+
+  res.json({ message: "Status Updated" });
+});
+
+// ================= RESET PASSWORD =================
+app.put('/api/students/:id/reset', requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  const { newpassword } = req.body;
+
+  await pool.query(
+    "UPDATE UserInformation SET password=$1 WHERE id=$2",
+    [newpassword, id]
+  );
+
+  res.json({ message: "Password Reset" });
+});
+
+// ================= PROTECTED PAGES =================
 app.get('/admin.html', requireAdmin, (req, res) => {
   res.sendFile(__dirname + '/public/admin.html');
 });
@@ -115,10 +129,7 @@ app.get('/dashboard.html', requireLogin, (req, res) => {
   res.sendFile(__dirname + '/public/dashboard.html');
 });
 
-// ===============================
-// START SERVER
-// ===============================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("RCA Training Platform Running on Port " + PORT);
+// ================= START =================
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server Running...");
 });
