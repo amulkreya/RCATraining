@@ -1,34 +1,69 @@
-
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
-const bcrypt = require('bcrypt');
 
+// ======================
+// LOGIN LOGIC
+// ======================
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const result = await pool.query(
-    "SELECT * FROM UserInformation WHERE email=$1",
-    [email]
-  );
+    // Basic validation
+    if (!email || !password) {
+      return res.send("Email and Password are required.");
+    }
 
-  if (result.rows.length === 0) return res.send("User not found");
+    // Find user
+    const result = await pool.query(
+      "SELECT * FROM UserInformation WHERE email = $1",
+      [email]
+    );
 
-  const user = result.rows[0];
+    if (result.rows.length === 0) {
+      return res.send("User not found.");
+    }
 
-  if (!user.isactive) return res.send("User inactive");
+    const user = result.rows[0];
 
-  const match = await bcrypt.compare(password, user.password);
+    // Check active status
+    if (!user.isactive) {
+      return res.send("Your account is inactive. Contact Admin.");
+    }
 
-  if (!match) return res.send("Invalid password");
+    // Plain text password check
+    if (password !== user.password) {
+      return res.send("Invalid password.");
+    }
 
-  req.session.user = user;
+    // Store session
+    req.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
 
-  if (user.role === "Admin") {
-    res.redirect('/admin.html');
-  } else {
-    res.redirect('/dashboard.html');
+    // Role based redirect
+    if (user.role === "Admin") {
+      return res.redirect('/admin.html');
+    } else {
+      return res.redirect('/dashboard.html');
+    }
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).send("Internal Server Error");
   }
+});
+
+// ======================
+// LOGOUT
+// ======================
+router.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login.html');
+  });
 });
 
 module.exports = router;
