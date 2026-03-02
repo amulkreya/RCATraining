@@ -20,6 +20,12 @@ app.use(express.json());
 // Serve only public assets (login.html allowed)
 app.use(express.static('public'));
 
+// Default route -> always open login page
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/login.html');
+});
+
+
 app.use(session({
   secret: 'rcaSecret',
   resave: false,
