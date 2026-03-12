@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Revenue Cloud Advance - Secure Dashboard</title>
+<title>Revenue Cloud Advance - Secure Streaming Portal</title>
 
 <style>
 
@@ -63,7 +63,7 @@ margin-bottom:30px;
 text-align:center;
 }
 
-/* GRID */
+/* VIDEO GRID */
 
 .video-grid{
 display:grid;
@@ -78,12 +78,12 @@ background:white;
 border-radius:12px;
 overflow:hidden;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
-transition:transform .25s ease, box-shadow .25s ease;
+transition:.3s;
 }
 
 .video-card:hover{
 transform:translateY(-6px);
-box-shadow:0 8px 22px rgba(0,0,0,0.15);
+box-shadow:0 10px 24px rgba(0,0,0,0.15);
 }
 
 .video-title{
@@ -105,42 +105,11 @@ background:black;
 
 .video-wrapper iframe{
 position:absolute;
-width:100%;
-height:100%;
-border:none;
-}
-
-/* SECURITY OVERLAY */
-
-.top-overlay{
-position:absolute;
 top:0;
 left:0;
 width:100%;
-height:70px;
-z-index:10;
-}
-
-.bottom-overlay{
-position:absolute;
-bottom:0;
-left:0;
-width:100%;
-height:65px;
-z-index:10;
-}
-
-/* PLAY ICON */
-
-.play-icon{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:60px;
-color:white;
-opacity:.9;
-pointer-events:none;
+height:100%;
+border:none;
 }
 
 /* FOOTER */
@@ -180,7 +149,7 @@ margin-top:40px;
 
 <script>
 
-// ================= VIDEO LIST =================
+/* VIDEO LIST */
 
 const videos = [
 
@@ -208,11 +177,11 @@ const videos = [
 
 ];
 
-const container = document.getElementById("videoContainer");
+const container=document.getElementById("videoContainer");
 
-videos.forEach(v => {
+videos.forEach(v=>{
 
-container.innerHTML += `
+container.innerHTML+=`
 
 <div class="video-card">
 
@@ -222,16 +191,10 @@ container.innerHTML += `
 
 <div class="video-wrapper">
 
-<div class="top-overlay"></div>
-<div class="bottom-overlay"></div>
-
-<div class="play-icon">▶</div>
-
 <iframe
 src="https://drive.google.com/file/d/${v.id}/preview"
 allow="autoplay; fullscreen"
-allowfullscreen
-sandbox="allow-same-origin allow-scripts allow-presentation">
+allowfullscreen>
 </iframe>
 
 </div>
@@ -243,7 +206,7 @@ sandbox="allow-same-origin allow-scripts allow-presentation">
 });
 
 
-// ================= LOGOUT =================
+/* LOGOUT */
 
 function logout(){
 
@@ -254,20 +217,17 @@ fetch("/logout")
 }
 
 
-// ================= SECURITY =================
+/* SECURITY */
 
-// Disable right click
+// disable right click
 document.addEventListener("contextmenu",e=>e.preventDefault())
 
-// Disable copy paste
-["copy","paste","cut"].forEach(evt=>
+// disable copy
+["copy","paste","cut"].forEach(evt=>{
 document.addEventListener(evt,e=>e.preventDefault())
-)
+})
 
-// Disable drag
-document.addEventListener("dragstart",e=>e.preventDefault())
-
-// Disable DevTools
+// disable devtools
 document.addEventListener("keydown",function(e){
 
 if(
@@ -281,15 +241,9 @@ alert("Action Blocked")
 
 })
 
-// Disable back
+// disable back
 history.pushState(null,null,location.href)
 window.onpopstate=function(){history.go(1)}
-
-// Auto logout 20 min
-setTimeout(()=>{
-alert("Session expired")
-logout()
-},720*60*1000)
 
 </script>
 
