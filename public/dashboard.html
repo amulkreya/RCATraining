@@ -3,230 +3,293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Revenue Cloud Advance - Secure Dashboard</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f4f6fb;
-  user-select: none;
+
+body{
+margin:0;
+font-family:"Segoe UI",Arial;
+background:#f4f6fb;
+user-select:none;
 }
 
-.header {
-  background: linear-gradient(135deg, #0b3d91, #1f6feb);
-  color: white;
-  padding: 18px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* HEADER */
+
+.header{
+background:linear-gradient(135deg,#0b3d91,#1f6feb);
+color:white;
+padding:18px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-.title {
-  font-size: 22px;
-  font-weight: bold;
+.title{
+font-size:22px;
+font-weight:bold;
 }
 
-.logout-btn {
-  background: #ff4d4f;
-  border: none;
-  padding: 10px 18px;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+.logout-btn{
+background:#ff4d4f;
+border:none;
+padding:10px 18px;
+color:white;
+border-radius:6px;
+cursor:pointer;
 }
 
-.logout-btn:hover {
-  background: #d9363e;
+.logout-btn:hover{
+background:#d9363e;
 }
 
-.container {
-  padding: 30px;
-  max-width: 1200px;
-  margin: auto;
+/* CONTAINER */
+
+.container{
+max-width:1300px;
+margin:auto;
+padding:30px;
 }
 
-.welcome-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  margin-bottom: 30px;
-  text-align: center;
+/* WELCOME */
+
+.welcome-card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
+margin-bottom:30px;
+text-align:center;
 }
 
-.video-section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+/* GRID */
+
+.video-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+gap:25px;
 }
 
-.video-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 12px;
+/* VIDEO CARD */
+
+.video-card{
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+transition:transform .25s ease, box-shadow .25s ease;
 }
 
-.video-wrapper {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-  border-radius: 12px;
-  background: black;
+.video-card:hover{
+transform:translateY(-6px);
+box-shadow:0 8px 22px rgba(0,0,0,0.15);
 }
 
-.top-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  z-index: 10;
+.video-title{
+font-size:16px;
+font-weight:600;
+padding:14px 16px;
+background:#fafafa;
+border-bottom:1px solid #eee;
 }
 
-.bottom-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 65px;
-  z-index: 10;
+/* VIDEO */
+
+.video-wrapper{
+position:relative;
+padding-bottom:56.25%;
+height:0;
+background:black;
 }
 
-iframe {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: none;
+.video-wrapper iframe{
+position:absolute;
+width:100%;
+height:100%;
+border:none;
 }
 
-.footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  color: #777;
+/* SECURITY OVERLAY */
+
+.top-overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:70px;
+z-index:10;
 }
+
+.bottom-overlay{
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+height:65px;
+z-index:10;
+}
+
+/* PLAY ICON */
+
+.play-icon{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:60px;
+color:white;
+opacity:.9;
+pointer-events:none;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+padding:20px;
+font-size:13px;
+color:#777;
+margin-top:40px;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
-  <button class="logout-btn" onclick="logout()">Logout</button>
+<div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
+<button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
 <div class="container">
 
-  <div class="welcome-card">
-    <h2>🎓 Welcome to RCA Training</h2>
-    <p>Authorized Access Only | Downloads & Recording Prohibited</p>
-  </div>
+<div class="welcome-card">
+<h2>🎓 Welcome to RCA Training</h2>
+<p>Authorized Access Only | Downloads & Recording Prohibited</p>
+</div>
 
-  <div id="videoContainer"></div>
+<div class="video-grid" id="videoContainer"></div>
 
 </div>
 
 <div class="footer">
-  © 2026 Kreya IT Consulting Pvt Ltd
+© 2026 Kreya IT Consulting Pvt Ltd
 </div>
 
 <script>
 
 // ================= VIDEO LIST =================
+
 const videos = [
-  { day: "Day 1", id: "1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79" },
-      { day: "Day 2", id: "1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR" },
-      { day: "Day 3", id: "1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C" },
-      { day: "Day 4", id: "13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ" },
-      { day: "Day 5.1", id: "1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY" },
-      { day: "Day 5.2", id: "12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu" },
-      { day: "Day 6", id: "10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw" },
-      { day: "Day 7", id: "1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb" },
-      { day: "Day 8", id: "1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax" },
-      { day: "Day 9", id: "1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz" },
-      { day: "Day 10", id: "17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe" },
-      { day: "Day 11", id: "1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q" },
-      { day: "Day 12", id: "1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1" },
-      { day: "Day 13.1", id: "1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2" },
-      { day: "Day 13.2", id: "19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj" },
-      { day: "Day 13.3", id: "1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG" },
-      { day: "Day 14", id: "1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP" },
-      { day: "Day 15", id: "1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4" },
-      { day: "Day 16", id: "1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q" },
-      { day: "Day 17", id: "162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9" },
-      { day: "Day 18", id: "1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7" }
+
+{day:"Day 1",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
+{day:"Day 2",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
+{day:"Day 3",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
+{day:"Day 4",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
+{day:"Day 5.1",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
+{day:"Day 5.2",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
+{day:"Day 6",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
+{day:"Day 7",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
+{day:"Day 8",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
+{day:"Day 9",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
+{day:"Day 10",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
+{day:"Day 11",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
+{day:"Day 12",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
+{day:"Day 13.1",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
+{day:"Day 13.2",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
+{day:"Day 13.3",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
+{day:"Day 14",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
+{day:"Day 15",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
+{day:"Day 16",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
+{day:"Day 17",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
+{day:"Day 18",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"}
+
 ];
 
 const container = document.getElementById("videoContainer");
 
 videos.forEach(v => {
-  container.innerHTML += `
-    <div class="video-section">
-      <div class="video-title">${v.day} - RCA Training</div>
-      <div class="video-wrapper">
-        <div class="top-overlay"></div>
-        <div class="bottom-overlay"></div>
-        <iframe
-          src="https://drive.google.com/file/d/${v.id}/preview"
-          sandbox="allow-same-origin allow-scripts allow-presentation"
-          allow="autoplay">
-        </iframe>
-      </div>
-    </div>
-  `;
+
+container.innerHTML += `
+
+<div class="video-card">
+
+<div class="video-title">
+📺 ${v.day} - RCA Training
+</div>
+
+<div class="video-wrapper">
+
+<div class="top-overlay"></div>
+<div class="bottom-overlay"></div>
+
+<div class="play-icon">▶</div>
+
+<iframe
+src="https://drive.google.com/file/d/${v.id}/preview"
+allow="autoplay; fullscreen"
+allowfullscreen
+sandbox="allow-same-origin allow-scripts allow-presentation">
+</iframe>
+
+</div>
+
+</div>
+
+`;
+
 });
 
+
 // ================= LOGOUT =================
-function logout() {
-  fetch("/logout")
-    .then(() => {
-      window.location.href = "/login.html";
-    })
-    .catch(() => {
-      window.location.href = "/login.html";
-    });
+
+function logout(){
+
+fetch("/logout")
+.then(()=>window.location.href="/login.html")
+.catch(()=>window.location.href="/login.html")
+
 }
+
 
 // ================= SECURITY =================
 
 // Disable right click
-document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("contextmenu",e=>e.preventDefault())
 
-// Disable copy / paste / cut
-["copy", "paste", "cut"].forEach(evt =>
-  document.addEventListener(evt, e => e.preventDefault())
-);
+// Disable copy paste
+["copy","paste","cut"].forEach(evt=>
+document.addEventListener(evt,e=>e.preventDefault())
+)
 
 // Disable drag
-document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("dragstart",e=>e.preventDefault())
 
-// Disable DevTools + Save + Print
-document.addEventListener("keydown", function(e) {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-    (e.ctrlKey && ["U","S","P"].includes(e.key))
-  ) {
-    e.preventDefault();
-    alert("Action Blocked");
-  }
-});
+// Disable DevTools
+document.addEventListener("keydown",function(e){
 
-// Disable back button
-history.pushState(null, null, location.href);
-window.onpopstate = function () {
-  history.go(1);
-};
+if(
+e.key==="F12" ||
+(e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+(e.ctrlKey && ["U","S","P"].includes(e.key))
+){
+e.preventDefault()
+alert("Action Blocked")
+}
 
-// Auto logout after 20 minutes
-setTimeout(() => {
-  alert("Session expired.");
-  logout();
-}, 720 * 60 * 1000);
+})
+
+// Disable back
+history.pushState(null,null,location.href)
+window.onpopstate=function(){history.go(1)}
+
+// Auto logout 20 min
+setTimeout(()=>{
+alert("Session expired")
+logout()
+},720*60*1000)
 
 </script>
 
