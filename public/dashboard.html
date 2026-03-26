@@ -3,20 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Revenue Cloud Advance - Secure Streaming Portal</title>
-
 <style>
-
 body{
 margin:0;
 font-family:"Segoe UI",Arial;
 background:#f4f6fb;
 user-select:none;
 }
-
-/* HEADER */
-
 .header{
 background:linear-gradient(135deg,#0b3d91,#1f6feb);
 color:white;
@@ -25,12 +19,10 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
-
 .title{
 font-size:22px;
 font-weight:bold;
 }
-
 .logout-btn{
 background:#ff4d4f;
 border:none;
@@ -39,21 +31,14 @@ color:white;
 border-radius:6px;
 cursor:pointer;
 }
-
 .logout-btn:hover{
 background:#d9363e;
 }
-
-/* CONTAINER */
-
 .container{
 max-width:1300px;
 margin:auto;
 padding:30px;
 }
-
-/* WELCOME CARD */
-
 .welcome-card{
 background:white;
 padding:25px;
@@ -62,17 +47,11 @@ box-shadow:0 4px 14px rgba(0,0,0,0.08);
 margin-bottom:30px;
 text-align:center;
 }
-
-/* VIDEO GRID */
-
 .video-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
 gap:25px;
 }
-
-/* VIDEO CARD */
-
 .video-card{
 background:white;
 border-radius:12px;
@@ -80,12 +59,10 @@ overflow:hidden;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
 transition:.3s;
 }
-
 .video-card:hover{
 transform:translateY(-6px);
 box-shadow:0 10px 24px rgba(0,0,0,0.15);
 }
-
 .video-title{
 font-size:16px;
 font-weight:600;
@@ -93,16 +70,12 @@ padding:14px 16px;
 background:#fafafa;
 border-bottom:1px solid #eee;
 }
-
-/* VIDEO WRAPPER */
-
 .video-wrapper{
 position:relative;
 padding-bottom:56.25%;
 height:0;
 background:black;
 }
-
 .video-wrapper iframe{
 position:absolute;
 top:0;
@@ -111,9 +84,6 @@ width:100%;
 height:100%;
 border:none;
 }
-
-/* BLOCK GOOGLE DRIVE POP OUT BUTTON */
-
 .drive-block{
 position:absolute;
 top:0;
@@ -124,9 +94,24 @@ background:black;
 z-index:10;
 opacity:0.9;
 }
-
-/* FOOTER */
-
+/* OneDrive error fallback message */
+.onedrive-error{
+position:absolute;
+top:0; left:0;
+width:100%; height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:#1a1a1a;
+color:#fff;
+font-size:14px;
+text-align:center;
+padding:20px;
+box-sizing:border-box;
+z-index:5;
+display:none;
+}
 .footer{
 text-align:center;
 padding:20px;
@@ -134,162 +119,141 @@ font-size:13px;
 color:#777;
 margin-top:40px;
 }
-
 </style>
 </head>
-
 <body>
 
 <div class="header">
-<div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
-<button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
 <div class="container">
 
-<div class="welcome-card">
-<h2>🎓 Welcome to RCA Training</h2>
-<p>Authorized Access Only | Downloads & Recording Prohibited</p>
-</div>
+  <div class="welcome-card">
+    <h2>🎓 Welcome to RCA Training</h2>
+    <p>Authorized Access Only | Downloads & Recording Prohibited</p>
+  </div>
 
-<div class="video-grid" id="videoContainer"></div>
+  <div class="video-grid" id="videoContainer"></div>
 
 </div>
 
 <div class="footer">
-© 2026 Kreya IT Consulting Pvt Ltd
+  © 2026 Kreya IT Consulting Pvt Ltd
 </div>
 
 <script>
 
-/* VIDEO LIST */
+const videos = [
 
-const videos=[
+  // ✅ GOOGLE DRIVE
+  {day:"Day 1",   type:"drive", id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
+  {day:"Day 2",   type:"drive", id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
+  {day:"Day 3",   type:"drive", id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
+  {day:"Day 4",   type:"drive", id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
+  {day:"Day 5.1", type:"drive", id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
+  {day:"Day 5.2", type:"drive", id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
+  {day:"Day 6",   type:"drive", id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
+  {day:"Day 7",   type:"drive", id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
+  {day:"Day 8",   type:"drive", id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
+  {day:"Day 9",   type:"drive", id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
+  {day:"Day 10",  type:"drive", id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
+  {day:"Day 11",  type:"drive", id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
+  {day:"Day 12",  type:"drive", id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
+  {day:"Day 13.1",type:"drive", id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
+  {day:"Day 13.2",type:"drive", id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
+  {day:"Day 13.3",type:"drive", id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
+  {day:"Day 14",  type:"drive", id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
+  {day:"Day 15",  type:"drive", id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
+  {day:"Day 16",  type:"drive", id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
+  {day:"Day 17",  type:"drive", id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
+  {day:"Day 18",  type:"drive", id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
+  {day:"Day 19",  type:"drive", id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
 
-// ✅ GOOGLE DRIVE (UNCHANGED)
-{day:"Day 1",type:"drive",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
-{day:"Day 2",type:"drive",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
-{day:"Day 3",type:"drive",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
-{day:"Day 4",type:"drive",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
-{day:"Day 5.1",type:"drive",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
-{day:"Day 5.2",type:"drive",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
-{day:"Day 6",type:"drive",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
-{day:"Day 7",type:"drive",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
-{day:"Day 8",type:"drive",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
-{day:"Day 9",type:"drive",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
-{day:"Day 10",type:"drive",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
-{day:"Day 11",type:"drive",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
-{day:"Day 12",type:"drive",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
-{day:"Day 13.1",type:"drive",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
-{day:"Day 13.2",type:"drive",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
-{day:"Day 13.3",type:"drive",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
-{day:"Day 14",type:"drive",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
-{day:"Day 15",type:"drive",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
-{day:"Day 16",type:"drive",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
-{day:"Day 17",type:"drive",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
-{day:"Day 18",type:"drive",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
-{day:"Day 19",type:"drive",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
-
-// ✅ ONEDRIVE (FIXED EMBED LINKS)
-{
-day:"Day 20 - DRO",
-type:"onedrive",
-embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36!467dccad58584dc8&authkey=!TZQbGtqn9GwwAYb&em=2"
-},
-{
-day:"Day 21 - Custom Region Discount Matrix",
-type:"onedrive",
-embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36!5296a65eda4a430c&authkey=!MQ59EZaGObef-Ab&em=2"
-}
+  // ✅ ONEDRIVE — using &download=0 embed format
+  {
+    day:"Day 20 - DRO",
+    type:"onedrive",
+    embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36%21467dccad58584dc8&authkey=%21TZQbGtqn9GwwAYb&em=2&wdo=2&cid=17f364c1c9541e36"
+  },
+  {
+    day:"Day 21 - Custom Region Discount Matrix",
+    type:"onedrive",
+    embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36%215296a65eda4a430c&authkey=%21MQ59EZaGObef-Ab&em=2&wdo=2&cid=17f364c1c9541e36"
+  }
 
 ];
 
-const container=document.getElementById("videoContainer");
+const container = document.getElementById("videoContainer");
 
-/* RENDER */
+videos.forEach((v, index) => {
 
-videos.forEach(v=>{
+  let iframeSrc = "";
+  let blockOverlay = "";
 
-let iframeSrc="";
-let blockOverlay="";
+  // GOOGLE DRIVE
+  if(v.type === "drive"){
+    iframeSrc = `https://drive.google.com/file/d/${v.id}/preview`;
+    blockOverlay = `<div class="drive-block"></div>`;
+  }
 
-/* GOOGLE DRIVE */
-if(v.type==="drive"){
-iframeSrc=`https://drive.google.com/file/d/${v.id}/preview`;
-blockOverlay=`<div class="drive-block"></div>`;
-}
+  // ONEDRIVE
+  if(v.type === "onedrive"){
+    iframeSrc = v.embed;
+  }
 
-/* ONEDRIVE */
-if(v.type==="onedrive"){
-iframeSrc=v.embed;
-}
+  if(!iframeSrc){ iframeSrc = "about:blank"; }
 
-/* FALLBACK */
-if(!iframeSrc){
-iframeSrc="about:blank";
-}
+  const cardId = `card-${index}`;
+  const iframeId = `iframe-${index}`;
 
-container.innerHTML+=`
-
-<div class="video-card">
-
-<div class="video-title">
-📺 ${v.day} - RCA Training
-</div>
-
-<div class="video-wrapper">
-
-${blockOverlay}
-
-<iframe
-src="${iframeSrc}"
-allow="autoplay; fullscreen"
-allowfullscreen>
-</iframe>
-
-</div>
-
-</div>
-
-`;
+  container.innerHTML += `
+    <div class="video-card" id="${cardId}">
+      <div class="video-title">📺 ${v.day} - RCA Training</div>
+      <div class="video-wrapper">
+        ${blockOverlay}
+        <iframe
+          id="${iframeId}"
+          src="${iframeSrc}"
+          allow="autoplay; fullscreen"
+          allowfullscreen
+          ${v.type === "onedrive" ? 'sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"' : ''}
+        ></iframe>
+      </div>
+    </div>
+  `;
 
 });
 
-
-/* LOGOUT */
-
+// LOGOUT
 function logout(){
-fetch("/logout")
-.then(()=>window.location.href="/login.html")
-.catch(()=>window.location.href="/login.html")
+  fetch("/logout")
+    .then(()  => window.location.href = "/login.html")
+    .catch(() => window.location.href = "/login.html");
 }
 
+// SECURITY
+document.addEventListener("contextmenu", e => e.preventDefault());
 
-/* SECURITY */
-
-document.addEventListener("contextmenu",e=>e.preventDefault());
-
-["copy","paste","cut"].forEach(evt=>{
-document.addEventListener(evt,e=>e.preventDefault());
+["copy","paste","cut"].forEach(evt => {
+  document.addEventListener(evt, e => e.preventDefault());
 });
 
-document.addEventListener("keydown",function(e){
-
-if(
-e.key==="F12" ||
-(e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-(e.ctrlKey && ["U","S","P"].includes(e.key))
-){
-e.preventDefault();
-alert("Action Blocked");
-}
-
+document.addEventListener("keydown", function(e){
+  if(
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && ["U","S","P"].includes(e.key))
+  ){
+    e.preventDefault();
+    alert("Action Blocked");
+  }
 });
 
-history.pushState(null,null,location.href);
-window.onpopstate=function(){history.go(1)};
+history.pushState(null, null, location.href);
+window.onpopstate = function(){ history.go(1); };
 
 </script>
-
 </body>
 </html>
