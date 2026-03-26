@@ -166,35 +166,61 @@ margin-top:40px;
 
 const videos=[
 
-{day:"Day 1",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
-{day:"Day 2",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
-{day:"Day 3",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
-{day:"Day 4",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
-{day:"Day 5.1",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
-{day:"Day 5.2",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
-{day:"Day 6",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
-{day:"Day 7",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
-{day:"Day 8",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
-{day:"Day 9",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
-{day:"Day 10",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
-{day:"Day 11",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
-{day:"Day 12",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
-{day:"Day 13.1",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
-{day:"Day 13.2",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
-{day:"Day 13.3",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
-{day:"Day 14",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
-{day:"Day 15",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
-{day:"Day 16",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
-{day:"Day 17",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
-{day:"Day 18",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
-{day:"Day 19",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"}
-  
+// GOOGLE DRIVE (existing)
+{day:"Day 1",type:"drive",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
+{day:"Day 2",type:"drive",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
+{day:"Day 3",type:"drive",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
+{day:"Day 4",type:"drive",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
+{day:"Day 5.1",type:"drive",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
+{day:"Day 5.2",type:"drive",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
+{day:"Day 6",type:"drive",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
+{day:"Day 7",type:"drive",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
+{day:"Day 8",type:"drive",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
+{day:"Day 9",type:"drive",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
+{day:"Day 10",type:"drive",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
+{day:"Day 11",type:"drive",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
+{day:"Day 12",type:"drive",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
+{day:"Day 13.1",type:"drive",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
+{day:"Day 13.2",type:"drive",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
+{day:"Day 13.3",type:"drive",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
+{day:"Day 14",type:"drive",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
+{day:"Day 15",type:"drive",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
+{day:"Day 16",type:"drive",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
+{day:"Day 17",type:"drive",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
+{day:"Day 18",type:"drive",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
+{day:"Day 19",type:"drive",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
+
+// 🔥 ONEDRIVE VIDEOS (NEW)
+{day:"Day 20 - DRO",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQCtzH1GWFjITZQbGtqn9GwwARJnTeqAfpk6gpc_PJC8LUc?e=Ug9NIt"},
+{day:"Day 21 - Custom Region Discount Matrix",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQBeppZSStoMQ59EZaGObef-AXfFB8mxZQiyrjOctSH3qNg?e=Vhp9nP"}
 
 ];
 
 const container=document.getElementById("videoContainer");
 
+/* FUNCTION: Convert OneDrive Share URL → Embed URL */
+function getOneDriveEmbed(url){
+    return url.replace("1drv.ms","onedrive.live.com/embed");
+}
+
+/* RENDER VIDEOS */
+
 videos.forEach(v=>{
+
+let iframeSrc="";
+let blockOverlay="";
+
+/* GOOGLE DRIVE */
+if(v.type==="drive"){
+    iframeSrc=`https://drive.google.com/file/d/${v.id}/preview`;
+    blockOverlay=`<div class="drive-block"></div>`;
+}
+
+/* ONEDRIVE */
+if(v.type==="onedrive"){
+    iframeSrc=getOneDriveEmbed(v.url);
+    blockOverlay=""; // no overlay needed
+}
 
 container.innerHTML+=`
 
@@ -206,10 +232,10 @@ container.innerHTML+=`
 
 <div class="video-wrapper">
 
-<div class="drive-block"></div>
+${blockOverlay}
 
 <iframe
-src="https://drive.google.com/file/d/${v.id}/preview"
+src="${iframeSrc}"
 allow="autoplay; fullscreen"
 allowfullscreen>
 </iframe>
