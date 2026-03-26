@@ -190,21 +190,21 @@ const videos=[
 {day:"Day 18",type:"drive",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
 {day:"Day 19",type:"drive",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
 
-// ✅ ONEDRIVE (USE SHORT LINKS ONLY)
-{day:"Day 20 - DRO",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQCtzH1GWFjITZQbGtqn9GwwARJnTeqAfpk6gpc_PJC8LUc?e=Ug9NIt"},
-{day:"Day 21 - Custom Region Discount Matrix",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQBeppZSStoMQ59EZaGObef-AXfFB8mxZQiyrjOctSH3qNg?e=Vhp9nP"}
+// ✅ ONEDRIVE (FIXED EMBED LINKS)
+{
+day:"Day 20 - DRO",
+type:"onedrive",
+embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36!467dccad58584dc8&authkey=!TZQbGtqn9GwwAYb&em=2"
+},
+{
+day:"Day 21 - Custom Region Discount Matrix",
+type:"onedrive",
+embed:"https://onedrive.live.com/embed?resid=17F364C1C9541E36!5296a65eda4a430c&authkey=!MQ59EZaGObef-Ab&em=2"
+}
 
 ];
 
 const container=document.getElementById("videoContainer");
-
-/* 🔥 Convert OneDrive link to embed */
-function getOneDriveEmbed(url){
-    if(url.includes("1drv.ms")){
-        return url.replace("1drv.ms","onedrive.live.com/embed");
-    }
-    return "";
-}
 
 /* RENDER */
 
@@ -215,18 +215,18 @@ let blockOverlay="";
 
 /* GOOGLE DRIVE */
 if(v.type==="drive"){
-    iframeSrc=`https://drive.google.com/file/d/${v.id}/preview`;
-    blockOverlay=`<div class="drive-block"></div>`;
+iframeSrc=`https://drive.google.com/file/d/${v.id}/preview`;
+blockOverlay=`<div class="drive-block"></div>`;
 }
 
 /* ONEDRIVE */
 if(v.type==="onedrive"){
-    iframeSrc=getOneDriveEmbed(v.url);
+iframeSrc=v.embed;
 }
 
 /* FALLBACK */
 if(!iframeSrc){
-    iframeSrc="about:blank";
+iframeSrc="about:blank";
 }
 
 container.innerHTML+=`
