@@ -166,7 +166,7 @@ margin-top:40px;
 
 const videos=[
 
-// GOOGLE DRIVE (existing)
+// ✅ GOOGLE DRIVE (UNCHANGED)
 {day:"Day 1",type:"drive",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
 {day:"Day 2",type:"drive",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
 {day:"Day 3",type:"drive",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
@@ -190,20 +190,23 @@ const videos=[
 {day:"Day 18",type:"drive",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
 {day:"Day 19",type:"drive",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
 
-// 🔥 ONEDRIVE VIDEOS (NEW)
-{day:"Day 20 - DRO",type:"onedrive",url:"https://onedrive.live.com/?qt=allmyphotos&photosData=%2Fshare%2F17F364C1C9541E36%21s467dccad58584dc8941b1adaa7f46c30%3Fithint%3Dvideo%26e%3DUg9NIt%26migratedtospo%3Dtrue&cid=17F364C1C9541E36&id=17F364C1C9541E36%21s467dccad58584dc8941b1adaa7f46c30&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3YvYy8xN2YzNjRjMWM5NTQxZTM2L0lRQ3R6SDFHV0ZqSVRaUWJHdHFuOUd3d0FSSm5UZXFBZnBrNmdwY19QSkM4TFVjP2U9VWc5Tkl0&v=photos"},
-{day:"Day 21 - Custom Region Discount Matrix",type:"onedrive",url:"https://onedrive.live.com/?qt=allmyphotos&photosData=%2Fshare%2F17F364C1C9541E36%21s5296a65eda4a430c9f4465a18e6de7fe%3Fithint%3Dvideo%26e%3DVhp9nP%26migratedtospo%3Dtrue&cid=17F364C1C9541E36&id=17F364C1C9541E36%21s5296a65eda4a430c9f4465a18e6de7fe&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3YvYy8xN2YzNjRjMWM5NTQxZTM2L0lRQmVwcFpTU3RvTVE1OUVaYUdPYmVmLUFYZkZCOG14WlFpeXJqT2N0U0gzcU5nP2U9VmhwOW5Q&v=photos"}
+// ✅ ONEDRIVE (USE SHORT LINKS ONLY)
+{day:"Day 20 - DRO",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQCtzH1GWFjITZQbGtqn9GwwARJnTeqAfpk6gpc_PJC8LUc?e=Ug9NIt"},
+{day:"Day 21 - Custom Region Discount Matrix",type:"onedrive",url:"https://1drv.ms/v/c/17f364c1c9541e36/IQBeppZSStoMQ59EZaGObef-AXfFB8mxZQiyrjOctSH3qNg?e=Vhp9nP"}
 
 ];
 
 const container=document.getElementById("videoContainer");
 
-/* FUNCTION: Convert OneDrive Share URL → Embed URL */
+/* 🔥 Convert OneDrive link to embed */
 function getOneDriveEmbed(url){
-    return url.replace("1drv.ms","onedrive.live.com/embed");
+    if(url.includes("1drv.ms")){
+        return url.replace("1drv.ms","onedrive.live.com/embed");
+    }
+    return "";
 }
 
-/* RENDER VIDEOS */
+/* RENDER */
 
 videos.forEach(v=>{
 
@@ -219,7 +222,11 @@ if(v.type==="drive"){
 /* ONEDRIVE */
 if(v.type==="onedrive"){
     iframeSrc=getOneDriveEmbed(v.url);
-    blockOverlay=""; // no overlay needed
+}
+
+/* FALLBACK */
+if(!iframeSrc){
+    iframeSrc="about:blank";
 }
 
 container.innerHTML+=`
