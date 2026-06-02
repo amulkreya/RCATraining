@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Revenue Cloud Advance - Secure Streaming Portal</title>
-
 <style>
 
 body{
@@ -14,8 +12,6 @@ font-family:"Segoe UI",Arial;
 background:#f4f6fb;
 user-select:none;
 }
-
-/* HEADER */
 
 .header{
 background:linear-gradient(135deg,#0b3d91,#1f6feb);
@@ -44,15 +40,11 @@ cursor:pointer;
 background:#d9363e;
 }
 
-/* CONTAINER */
-
 .container{
 max-width:1300px;
 margin:auto;
 padding:30px;
 }
-
-/* WELCOME CARD */
 
 .welcome-card{
 background:white;
@@ -63,15 +55,11 @@ margin-bottom:30px;
 text-align:center;
 }
 
-/* VIDEO GRID */
-
 .video-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
 gap:25px;
 }
-
-/* VIDEO CARD */
 
 .video-card{
 background:white;
@@ -94,38 +82,88 @@ background:#fafafa;
 border-bottom:1px solid #eee;
 }
 
-/* VIDEO WRAPPER */
-
+/* THUMBNAIL WRAPPER */
 .video-wrapper{
 position:relative;
 padding-bottom:56.25%;
 height:0;
-background:black;
+background:#0a0a0a;
+cursor:pointer;
 }
 
+/* THUMBNAIL IMAGE */
+.video-wrapper img.thumb{
+position:absolute;
+top:0; left:0;
+width:100%; height:100%;
+object-fit:cover;
+opacity:0.85;
+transition:opacity .2s;
+}
+
+.video-wrapper:hover img.thumb{
+opacity:1;
+}
+
+/* PLAY BUTTON OVERLAY */
+.play-overlay{
+position:absolute;
+top:50%; left:50%;
+transform:translate(-50%,-50%);
+width:64px; height:64px;
+background:rgba(255,255,255,0.92);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+pointer-events:none;
+transition:transform .2s, background .2s;
+z-index:5;
+}
+
+.video-wrapper:hover .play-overlay{
+transform:translate(-50%,-50%) scale(1.1);
+background:rgba(255,255,255,1);
+}
+
+.play-overlay svg{
+width:28px; height:28px;
+fill:#1f6feb;
+margin-left:4px;
+}
+
+/* DURATION / LABEL BADGE */
+.play-label{
+position:absolute;
+bottom:10px;
+left:12px;
+background:rgba(0,0,0,0.65);
+color:white;
+font-size:12px;
+padding:3px 8px;
+border-radius:4px;
+pointer-events:none;
+z-index:5;
+}
+
+/* ACTIVE IFRAME (after click) */
 .video-wrapper iframe{
 position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
+top:0; left:0;
+width:100%; height:100%;
 border:none;
+z-index:20;
 }
 
-/* BLOCK GOOGLE DRIVE POP OUT BUTTON */
-
+/* BLOCK DRIVE POP-OUT BUTTON */
 .drive-block{
 position:absolute;
-top:0;
-right:0;
-width:80px;
-height:60px;
+top:0; right:0;
+width:80px; height:60px;
 background:black;
-z-index:10;
+z-index:30;
 opacity:0.9;
 }
-
-/* FOOTER */
 
 .footer{
 text-align:center;
@@ -141,103 +179,113 @@ margin-top:40px;
 <body>
 
 <div class="header">
-<div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
-<button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="title">Revenue Cloud Advance - Secure Streaming Portal</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
 <div class="container">
 
-<div class="welcome-card">
-<h2>🎓 Welcome to RCA Training</h2>
-<p>Authorized Access Only | Downloads & Recording Prohibited</p>
-</div>
+  <div class="welcome-card">
+    <h2>🎓 Welcome to RCA Training</h2>
+    <p>Authorized Access Only | Downloads & Recording Prohibited</p>
+  </div>
 
-<div class="video-grid" id="videoContainer"></div>
+  <div class="video-grid" id="videoContainer"></div>
 
 </div>
 
 <div class="footer">
-© 2026 Kreya IT Consulting Pvt Ltd | AMUL BARANWAL | +91-9582388885 | amul@kreyaconsulting.com
+  © 2026 Kreya IT Consulting Pvt Ltd | AMUL BARANWAL | +91-9582388885 | amul@kreyaconsulting.com
 </div>
 
 <script>
 
-/* VIDEO LIST */
-
 const videos=[
-
-{day:"Day 1: Introduction",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
-{day:"Day 2: Catalog Category",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
-{day:"Day 3: Product Catalog Management",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
-{day:"Day 4: Attribute and PCM",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
-{day:"Day 5.1 Pricing Rule",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
-{day:"Day 5.2: Pricing Rule",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
-{day:"Day 6: Pricing Rule",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
-{day:"Day 7: Product Configuration Rule",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
-{day:"Day 8: Product Configuration Rule",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
-{day:"Day 9: Advance Configuration Rule",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
-{day:"Day 10: Twin Field",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
-{day:"Day 11: Derived Price",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
-{day:"Day 12: Cost Book and Markup Price",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
-{day:"Day 13.1: Advance Approval",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
-{day:"Day 13.2: Advance Approval",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
-{day:"Day 13.3: Advance Approval",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
-{day:"Day 14: Qualification/DisQualification",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
-{day:"Day 15: Guided Selling",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
-{day:"Day 16: Usage Based Pricing",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
-{day:"Day 17: Order contract Renewal",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
-{day:"Day 18: DRO",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
-{day:"Day 19: DRO_New",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
-{day:"Day 20: Region Matrix Pricing",id:"1RoP8I7B0w2vfTaxWW0r8b3Hri6UhR2QV"},
-{day:"Day 21: Billing part1",id:"1f-OoA8GjySj_3GDTIb807foWdMe9X0t3"},
-{day:"Day 22: Billing part2",id:"1HxQH1QGQQsuxLtMgX4zquDpEdGsZ414W"},
-{day:"Day 23: Billing part3",id:"1wOh8nL0OCvh5NP-JRgINUMuu6LC2QPdS"},
-{day:"Day 24: Billing part4: Billing Batch Schduler",id:"1JNj_G3ldcl946tUNmktcXGmhie2thrz9"},
-{day:"Day 25: Invoice PDF part1",id:"1WSo4kMOtFJVF9x5kwlKi_4lljeCDbzDZ"},
- 
- 
-
+  {day:"Day 1: Introduction",id:"1ZCFzCjlRvRrnvkph6wtvyy-5REZMEM79"},
+  {day:"Day 2: Catalog Category",id:"1tOC-EYYvgf_XYPfkVe-Z96qWige3f0hR"},
+  {day:"Day 3: Product Catalog Management",id:"1dlML55PJIad7JhqFE6uGkwNtKeP3lB1C"},
+  {day:"Day 4: Attribute and PCM",id:"13SI0aCuWXVLU2fYMB_tc8mDQ6vF_-dpQ"},
+  {day:"Day 5.1 Pricing Rule",id:"1EJgUi5oei2zDTb5a37iXcYU0JmxsF3XY"},
+  {day:"Day 5.2: Pricing Rule",id:"12iyaOwVZjavLLS3oxWB7IjLcjXnNHRKu"},
+  {day:"Day 6: Pricing Rule",id:"10UBYl5kqLICWj-cAR7RciRfZhUK8W7Lw"},
+  {day:"Day 7: Product Configuration Rule",id:"1jM37rq3txFDMkBO4gen82Ic6MQyLbGLb"},
+  {day:"Day 8: Product Configuration Rule",id:"1UILQiYrjj_R-s-LXHwBQ696sGgAUTYax"},
+  {day:"Day 9: Advance Configuration Rule",id:"1ORaOfZWMF7QQfXPzEWtyFcYzpW1aTTFz"},
+  {day:"Day 10: Twin Field",id:"17nZZ2hHbkh1-v_VrTERwvxAh8nTYTiTe"},
+  {day:"Day 11: Derived Price",id:"1tJngUgPr07aPuxUIBDoHq1Qhs0gIe38Q"},
+  {day:"Day 12: Cost Book and Markup Price",id:"1IYq2XUJXY_d8xz2zUTHv8zIkQNINqWW1"},
+  {day:"Day 13.1: Advance Approval",id:"1p4P_39r46zCfreO2QrFK9G6pCaKKQ6X2"},
+  {day:"Day 13.2: Advance Approval",id:"19fwPVMpR3YO9SGPMgNg1KN6SJQSybEqj"},
+  {day:"Day 13.3: Advance Approval",id:"1EKEqqvdKl5JQJsd4N6OwsphdTTQdraVG"},
+  {day:"Day 14: Qualification/DisQualification",id:"1IxGxnts8OFliXyK8P4mBDx9QCz-xC2jP"},
+  {day:"Day 15: Guided Selling",id:"1qrNccLKWzW9v-GJiPAHVUvrd8lywIwd4"},
+  {day:"Day 16: Usage Based Pricing",id:"1MmtBoTgmbW_9ZUKIz_YroKZnIDuXdV0Q"},
+  {day:"Day 17: Order contract Renewal",id:"162Mkh2yyTDbM3xQ6kNaQ1XHI2hZr22a9"},
+  {day:"Day 18: DRO",id:"1sr2sKFduMJXxNNqt0byF0OjWtiuSVLk7"},
+  {day:"Day 19: DRO_New",id:"1Cxjog7oeXQfA1tN9UL_081Z1cZynCBog"},
+  {day:"Day 20: Region Matrix Pricing",id:"1RoP8I7B0w2vfTaxWW0r8b3Hri6UhR2QV"},
+  {day:"Day 21: Billing part1",id:"1f-OoA8GjySj_3GDTIb807foWdMe9X0t3"},
+  {day:"Day 22: Billing part2",id:"1HxQH1QGQQsuxLtMgX4zquDpEdGsZ414W"},
+  {day:"Day 23: Billing part3",id:"1wOh8nL0OCvh5NP-JRgINUMuu6LC2QPdS"},
+  {day:"Day 24: Billing part4: Billing Batch Schduler",id:"1JNj_G3ldcl946tUNmktcXGmhie2thrz9"},
+  {day:"Day 25: Invoice PDF part1",id:"1WSo4kMOtFJVF9x5kwlKi_4lljeCDbzDZ"},
 ];
 
- 
-  
 const container=document.getElementById("videoContainer");
 
-videos.forEach(v=>{
+videos.forEach((v,index)=>{
 
-container.innerHTML+=`
+  const thumbUrl=`https://drive.google.com/thumbnail?id=${v.id}&sz=w640`;
 
-<div class="video-card">
+  const card=document.createElement("div");
+  card.className="video-card";
 
-<div class="video-title">
-📺 ${v.day} - RCA Training
-</div>
+  card.innerHTML=`
+    <div class="video-title">📺 ${v.day} - RCA Training</div>
+    <div class="video-wrapper" data-id="${v.id}" onclick="loadVideo(this)">
+      <img class="thumb" src="${thumbUrl}" alt="${v.day}" draggable="false"
+           onerror="this.style.display='none'">
+      <div class="play-overlay">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+      </div>
+      <div class="play-label">▶ Click to play</div>
+    </div>
+  `;
 
-<div class="video-wrapper">
-
-<div class="drive-block"></div>
-
-<iframe
-src="https://drive.google.com/file/d/${v.id}/preview"
-allow="autoplay; fullscreen"
-allowfullscreen>
-</iframe>
-
-</div>
-
-</div>
-
-`;
-
+  container.appendChild(card);
 });
 
 
-/* LOGOUT */
+function loadVideo(wrapper){
+
+  /* Already loaded */
+  if(wrapper.querySelector("iframe")) return;
+
+  const id=wrapper.dataset.id;
+
+  /* Remove thumbnail elements */
+  wrapper.innerHTML="";
+
+  /* Drive block overlay (hides pop-out button) */
+  const block=document.createElement("div");
+  block.className="drive-block";
+  wrapper.appendChild(block);
+
+  /* Inject iframe */
+  const iframe=document.createElement("iframe");
+  iframe.src=`https://drive.google.com/file/d/${id}/preview`;
+  iframe.allow="autoplay; fullscreen";
+  iframe.allowFullscreen=true;
+  wrapper.appendChild(iframe);
+}
+
 
 function logout(){
-fetch("/logout")
-.then(()=>window.location.href="/login.html")
-.catch(()=>window.location.href="/login.html")
+  fetch("/logout")
+    .then(()=>window.location.href="/login.html")
+    .catch(()=>window.location.href="/login.html");
 }
 
 
@@ -246,26 +294,23 @@ fetch("/logout")
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
 ["copy","paste","cut"].forEach(evt=>{
-document.addEventListener(evt,e=>e.preventDefault());
+  document.addEventListener(evt,e=>e.preventDefault());
 });
 
 document.addEventListener("keydown",function(e){
-
-if(
-e.key==="F12" ||
-(e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-(e.ctrlKey && ["U","S","P"].includes(e.key))
-){
-e.preventDefault();
-alert("Action Blocked");
-}
-
+  if(
+    e.key==="F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && ["U","S","P"].includes(e.key))
+  ){
+    e.preventDefault();
+    alert("Action Blocked");
+  }
 });
 
 history.pushState(null,null,location.href);
 window.onpopstate=function(){history.go(1)};
 
 </script>
-
 </body>
 </html>
