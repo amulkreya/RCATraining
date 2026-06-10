@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreya Courses — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ee; --bg2: #eceae3; --surface: #ffffff; --surface2: #f9f8f5;
+    --border: #e2dfd6; --text: #1a1814; --text2: #6b6760; --text3: #9e9b96;
+    --accent: #c84b31; --accent2: #e8693a; --accent-light: #fdf0ec;
+    --green: #2d6a4f; --green-light: #e8f5ef; --shadow: 0 2px 8px rgba(26,24,20,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,24,20,0.12); --radius: 12px; --radius-lg: 20px;
+    --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="dark"] {
+    --bg: #0f0e0c; --bg2: #1a1814; --surface: #201e1b; --surface2: #252220;
+    --border: #2e2c28; --text: #f0ede6; --text2: #a09d96; --text3: #6b6760;
+    --accent: #e8693a; --accent2: #c84b31; --accent-light: #2a1810;
+    --green: #52b788; --green-light: #0d2218;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3); --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px; transition: var(--transition); -webkit-user-select: none; user-select: none;
+    position: relative; overflow: hidden;
+  }
+  .bg-orb1 {
+    position: fixed; top: -15%; right: -8%; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,75,49,0.12) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .bg-orb2 {
+    position: fixed; bottom: -20%; left: -10%; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,105,58,0.08) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .login-card {
+    position: relative; z-index: 1; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 48px;
+    width: 100%; max-width: 420px; box-shadow: var(--shadow-lg);
+    animation: slideUp 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes slideUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+  .brand { text-align: center; margin-bottom: 32px; }
+  .brand-logo {
+    width: 52px; height: 52px; background: var(--accent); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
+    box-shadow: 0 4px 16px rgba(200,75,49,0.35);
+  }
+  .brand-logo svg { width: 28px; height: 28px; fill: white; }
+  .brand-name { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+  .brand-name span { color: var(--accent); }
+  .brand-tagline { font-size: 13px; color: var(--text3); margin-top: 4px; font-weight: 300; }
+
+  .tab-switcher {
+    display: flex; background: var(--bg2); border-radius: 10px; padding: 4px; margin-bottom: 28px; gap: 4px;
+  }
+  .tab-btn {
+    flex: 1; padding: 10px; border: none; border-radius: 7px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; background: transparent; color: var(--text2); transition: var(--transition);
+  }
+  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .form-input {
+    width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+    border-radius: var(--radius); background: var(--surface2); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 15px; transition: var(--transition); outline: none;
+  }
+  .form-input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(200,75,49,0.1); }
+  .btn-primary {
+    width: 100%; padding: 14px; background: var(--accent); color: white; border: none;
+    border-radius: var(--radius); font-family: 'Syne', sans-serif; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: var(--transition); margin-top: 8px; letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,75,49,0.3); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .msg {
+    border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px;
+    text-align: center; display: none;
+  }
+  .msg.show { display: block; }
+  .msg.error { background: #fdf0ec; color: var(--accent); border: 1px solid rgba(200,75,49,0.2); }
+  .msg.success { background: var(--green-light); color: var(--green); border: 1px solid rgba(45,106,79,0.2); }
+
+  .theme-toggle-wrap { position: fixed; top: 20px; right: 20px; z-index: 10; }
+  .theme-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .toggle-label { font-size: 12px; font-weight: 500; color: var(--text3); }
+  .toggle-track {
+    width: 44px; height: 24px; border-radius: 12px; background: var(--bg2);
+    border: 1.5px solid var(--border); position: relative; cursor: pointer; transition: var(--transition);
+  }
+  .toggle-track.on { background: var(--accent); border-color: var(--accent); }
+  .toggle-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--text3);
+    position: absolute; top: 50%; transform: translateY(-50%); left: 3px;
+    transition: var(--transition); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-track.on .toggle-thumb { left: calc(100% - 19px); background: white; }
+
+  .spinner {
+    display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
+</style>
+</head>
+<body>
+<div class="bg-orb1"></div>
+<div class="bg-orb2"></div>
+
+<div class="theme-toggle-wrap">
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span class="toggle-label" id="themeLabel">Light</span>
+    <div class="toggle-track" id="themeTrack"><div class="toggle-thumb"></div></div>
+  </div>
+</div>
+
+<div class="login-card">
+  <div class="brand">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+    </div>
+    <div class="brand-name">Kreya <span>Courses</span></div>
+    <div class="brand-tagline">Salesforce Revenue Cloud Advanced Training</div>
+  </div>
+
+  <div class="tab-switcher">
+    <button class="tab-btn active" id="tabStudent" onclick="switchTab('student')">Student Login</button>
+    <button class="tab-btn" id="tabAdmin" onclick="switchTab('admin')">Admin</button>
+  </div>
+
+  <!-- Student Login -->
+  <div id="studentForm">
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" type="text" id="stuUser" placeholder="Enter your username" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="stuPass" placeholder="Enter your password">
+    </div>
+    <button class="btn-primary" id="btnStuLogin" onclick="studentLogin()">Sign In to My Courses</button>
+    <div class="msg error" id="stuError"></div>
+  </div>
+
+  <!-- Admin Login -->
+  <div id="adminForm" style="display:none;">
+    <div class="form-group">
+      <label class="form-label">Admin Username</label>
+      <input class="form-input" type="text" id="admUser" placeholder="Enter admin username" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="admPass" placeholder="••••••••">
+    </div>
+    <button class="btn-primary" id="btnAdmLogin" onclick="adminLogin()">Access Admin Panel</button>
+    <div class="msg error" id="admError"></div>
+  </div>
+</div>
+
+<script>
+let isDark = localStorage.getItem('kreya_v2_theme') === 'dark';
+
+function setTheme(dark) {
+  isDark = dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('themeTrack').classList.toggle('on', dark);
+  document.getElementById('themeLabel').textContent = dark ? 'Dark' : 'Light';
+  localStorage.setItem('kreya_v2_theme', dark ? 'dark' : 'light');
+}
+function toggleTheme() { setTheme(!isDark); }
+if (isDark) setTheme(true);
+
+function switchTab(tab) {
+  document.getElementById('tabStudent').classList.toggle('active', tab === 'student');
+  document.getElementById('tabAdmin').classList.toggle('active', tab === 'admin');
+  document.getElementById('studentForm').style.display = tab === 'student' ? '' : 'none';
+  document.getElementById('adminForm').style.display   = tab === 'admin'   ? '' : 'none';
+}
+
+// Check if already logged in
+const existingRole = sessionStorage.getItem('kreya_v2_role');
+if (existingRole === 'admin' || existingRole === 'student') {
+  window.location.href = '/kreya/dashboard';
+}
+
+function shake(el) {
+  if (!el) return;
+  el.style.animation = 'none'; el.offsetHeight;
+  el.style.animation = 'shake 0.4s ease';
+  setTimeout(() => el.style.animation = '', 400);
+}
+
+async function studentLogin() {
+  const btn = document.getElementById('btnStuLogin');
+  const err = document.getElementById('stuError');
+  const u = document.getElementById('stuUser').value.trim();
+  const p = document.getElementById('stuPass').value;
+  err.classList.remove('show');
+  if (!u || !p) { err.textContent = 'Please enter username and password.'; err.classList.add('show'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Signing in…';
+  try {
+    const res = await fetch('/kreya/api/student/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Login failed'; err.classList.add('show'); shake(document.getElementById('stuUser')); return; }
+    sessionStorage.setItem('kreya_v2_token', data.token);
+    sessionStorage.setItem('kreya_v2_role', 'student');
+    sessionStorage.setItem('kreya_v2_username', data.username);
+    sessionStorage.setItem('kreya_v2_fullname', data.fullName || data.username);
+    window.location.href = '/kreya/dashboard';
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.'; err.classList.add('show');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Sign In to My Courses';
+  }
+}
+
+async function adminLogin() {
+  const btn = document.getElementById('btnAdmLogin');
+  const err = document.getElementById('admError');
+  const u = document.getElementById('admUser').value.trim();
+  const p = document.getElementById('admPass').value;
+  err.classList.remove('show');
+  if (!u || !p) { err.textContent = 'Please enter credentials.'; err.classList.add('show'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Verifying…';
+  try {
+    const res = await fetch('/kreya/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Login failed'; err.classList.add('show'); shake(document.getElementById('admUser')); return; }
+    sessionStorage.setItem('kreya_v2_token', data.token);
+    sessionStorage.setItem('kreya_v2_role', 'admin');
+    sessionStorage.setItem('kreya_v2_username', 'Admin');
+    window.location.href = '/kreya/dashboard';
+  } catch(e) {
+    err.textContent = 'Network error. Please try again.'; err.classList.add('show');
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Access Admin Panel';
+  }
+}
+
+document.getElementById('stuPass').addEventListener('keydown', e => { if (e.key === 'Enter') studentLogin(); });
+document.getElementById('admPass').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
+
+// Auto-switch to admin tab if URL is /kreya/admin
+if (window.location.pathname === '/kreya/admin') switchTab('admin');
+</script>
+</body>
+</html>
