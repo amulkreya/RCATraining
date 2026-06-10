@@ -192,3 +192,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("🚀 RCA Training Platform Running on Port " + PORT);
 });
+
+/* ================= KREYA LMS V2 ================= */
+const kreyaV2 = require('./routes/kreya_v2_routes');
+app.use('/kreya', kreyaV2);
