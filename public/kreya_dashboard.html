@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreya Courses — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f5f3ee;--bg2:#eceae3;--surface:#ffffff;--surface2:#f9f8f5;
+    --border:#e2dfd6;--text:#1a1814;--text2:#6b6760;--text3:#9e9b96;
+    --accent:#c84b31;--accent2:#e8693a;--accent-light:#fdf0ec;
+    --green:#2d6a4f;--green-light:#e8f5ef;--red:#c84b31;--red-light:#fdf0ec;
+    --shadow:0 2px 8px rgba(26,24,20,0.08);--shadow-lg:0 8px 32px rgba(26,24,20,0.12);
+    --radius:12px;--radius-lg:20px;--transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="dark"] {
+    --bg:#0f0e0c;--bg2:#1a1814;--surface:#201e1b;--surface2:#252220;
+    --border:#2e2c28;--text:#f0ede6;--text2:#a09d96;--text3:#6b6760;
+    --accent:#e8693a;--accent2:#c84b31;--accent-light:#2a1810;
+    --green:#52b788;--green-light:#0d2218;
+    --shadow:0 2px 8px rgba(0,0,0,0.3);--shadow-lg:0 8px 32px rgba(0,0,0,0.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:var(--transition);-webkit-user-select:none;user-select:none;}
+  ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+  .topbar-brand{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.3px;display:flex;align-items:center;gap:10px;}
+  .topbar-brand span{color:var(--accent);}
+  .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+  .topbar-right{display:flex;align-items:center;gap:12px;}
+  .role-badge{background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.8px;}
+  .role-badge.student{background:var(--green-light);color:var(--green);}
+  .welcome-text{font-size:13px;color:var(--text2);}
+  .welcome-text strong{color:var(--text);}
+  .btn-logout{padding:8px 18px;border:1.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition);}
+  .btn-logout:hover{border-color:var(--accent);color:var(--accent);}
+  .theme-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .toggle-label{font-size:12px;font-weight:500;color:var(--text3);}
+  .toggle-track{width:44px;height:24px;border-radius:12px;background:var(--bg2);border:1.5px solid var(--border);position:relative;cursor:pointer;transition:var(--transition);}
+  .toggle-track.on{background:var(--accent);border-color:var(--accent);}
+  .toggle-thumb{width:16px;height:16px;border-radius:50%;background:var(--text3);position:absolute;top:50%;transform:translateY(-50%);left:3px;transition:var(--transition);box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+  .toggle-track.on .toggle-thumb{left:calc(100% - 19px);background:white;}
+
+  /* ── TABS (admin) ── */
+  .admin-tabs{display:flex;gap:4px;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .admin-tab{padding:14px 20px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:var(--transition);background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;}
+  .admin-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .admin-tab:hover{color:var(--text);}
+
+  /* ── MAIN CONTENT ── */
+  .main{flex:1;padding:32px;max-width:1200px;margin:0 auto;width:100%;}
+
+  /* ── CARDS ── */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);}
+  .card-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .card-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+
+  .two-col{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start;}
+
+  /* ── FORMS ── */
+  .form-group{margin-bottom:16px;}
+  .form-label{display:block;font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;}
+  .form-input{width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:var(--transition);outline:none;}
+  .form-input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(200,75,49,0.1);}
+  .btn-primary{width:100%;padding:13px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);letter-spacing:0.3px;}
+  .btn-primary:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,75,49,0.3);}
+  .btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  .btn-sm{padding:6px 14px;border-radius:7px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;}
+  .btn-sm:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-sm.danger{color:var(--red);border-color:rgba(200,75,49,0.3);}
+  .btn-sm.danger:hover{background:var(--red-light);border-color:var(--red);}
+  .btn-sm.success{color:var(--green);border-color:var(--green);}
+  .btn-sm.success:hover{background:var(--green-light);}
+
+  .divider{height:1px;background:var(--border);margin:20px 0;}
+
+  .msg{border-radius:8px;padding:10px 14px;font-size:13px;margin-top:10px;text-align:center;display:none;}
+  .msg.show{display:block;}
+  .msg.error{background:var(--red-light);color:var(--red);border:1px solid rgba(200,75,49,0.2);}
+  .msg.success{background:var(--green-light);color:var(--green);border:1px solid rgba(45,106,79,0.2);}
+
+  /* ── CHECKBOXES ── */
+  .checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:220px;overflow-y:auto;}
+  .checkbox-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:var(--bg2);cursor:pointer;transition:var(--transition);}
+  .checkbox-item:hover{background:var(--accent-light);}
+  .checkbox-item input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+  .checkbox-item label{font-size:13px;color:var(--text2);cursor:pointer;line-height:1.3;}
+  .select-row{display:flex;gap:6px;margin-bottom:10px;}
+
+  /* ── TABLE ── */
+  .table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .count-badge{font-size:13px;color:var(--text3);}
+  .data-table{width:100%;border-collapse:collapse;}
+  .data-table th{text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;padding:0 12px 12px;border-bottom:1px solid var(--border);}
+  .data-table td{padding:13px 12px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);vertical-align:middle;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table tr:hover td{background:var(--bg2);}
+  .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;}
+  .status-badge.active{background:var(--green-light);color:var(--green);}
+  .status-badge.inactive{background:var(--bg2);color:var(--text3);}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .pill{display:inline-flex;background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;cursor:pointer;transition:var(--transition);}
+  .pill:hover{background:var(--accent);color:white;}
+  .action-row{display:flex;gap:6px;}
+
+  /* ── EMPTY STATE ── */
+  .empty{text-align:center;padding:48px 24px;color:var(--text3);}
+  .empty-icon{font-size:40px;margin-bottom:12px;}
+  .empty-text{font-size:14px;}
+
+  /* ── SEARCH ── */
+  .search-row{display:flex;gap:10px;margin-bottom:20px;align-items:center;}
+  .search-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:var(--transition);}
+  .search-input:focus{border-color:var(--accent);background:var(--surface);}
+
+  /* ── LECTURE CARDS (student) ── */
+  .lectures-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+  .lecture-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow);}
+  .lecture-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--accent);}
+  .lecture-thumb{height:140px;background:linear-gradient(135deg,var(--bg2) 0%,var(--border) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .lecture-thumb::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,75,49,0.15) 0%,rgba(232,105,58,0.08) 100%);}
+  .play-btn{width:52px;height:52px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:var(--transition);box-shadow:0 4px 16px rgba(200,75,49,0.4);}
+  .play-btn svg{width:20px;height:20px;fill:white;margin-left:3px;}
+  .lecture-card:hover .play-btn{transform:scale(1.1);}
+  .lec-num{position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.5);color:white;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;}
+  .lecture-info{padding:18px;}
+  .lecture-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .lecture-desc{font-size:12px;color:var(--text3);}
+
+  /* ── VIDEO MODAL ── */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;padding:20px;}
+  .modal-overlay.active{display:flex;}
+  .modal-inner{width:100%;max-width:960px;position:relative;}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:white;}
+  .modal-controls{display:flex;align-items:center;gap:10px;}
+  .modal-btn{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+  .modal-btn:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.5);}
+  .modal-btn svg{width:18px;height:18px;fill:white;}
+  .video-wrapper{width:100%;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:#000;position:relative;}
+  .video-wrapper iframe{width:100%;height:100%;border:none;}
+  .toolbar-shield{position:absolute;top:0;left:0;right:0;height:48px;z-index:10;background:transparent;cursor:default;}
+
+  #videoWrapper:fullscreen,#videoWrapper:-webkit-full-screen{width:100vw!important;height:100vh!important;aspect-ratio:unset!important;border-radius:0!important;}
+  #videoWrapper:fullscreen iframe,#videoWrapper:-webkit-full-screen iframe{width:100%!important;height:100%!important;}
+
+  /* Screen block */
+  .screen-block{display:none;position:fixed;inset:0;z-index:999;background:#000;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:white;}
+  .screen-block.active{display:flex;}
+  .screen-block-icon{font-size:48px;}
+  .screen-block-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+  .screen-block-sub{font-size:14px;color:rgba(255,255,255,0.5);text-align:center;}
+  .btn-resume{margin-top:8px;display:none;align-items:center;gap:10px;padding:14px 32px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:var(--transition);}
+  .btn-resume.visible{display:flex;}
+  .btn-resume:hover{background:var(--accent2);}
+  .btn-resume svg{width:20px;height:20px;fill:white;margin-left:2px;}
+
+  /* Edit modal */
+  .edit-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:20px;}
+  .edit-overlay.active{display:flex;}
+  .edit-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);animation:slideUp 0.3s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .edit-modal-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+  .close-x{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:var(--transition);}
+  .close-x:hover{color:var(--text);border-color:var(--text);}
+
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+
+  .loading-screen{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;color:var(--text3);}
+  .loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+
+  @media(max-width:768px){.two-col{grid-template-columns:1fr;}.main{padding:20px 16px;}.topbar{padding:0 16px;}.admin-tabs{padding:0 16px;}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-dot"></div>
+    Kreya <span>Courses</span>
+  </div>
+  <div class="topbar-right">
+    <span class="welcome-text">Welcome, <strong id="topbarName">—</strong></span>
+    <span class="role-badge" id="roleBadge">—</span>
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <span class="toggle-label" id="themeLabel">Light</span>
+      <div class="toggle-track" id="themeTrack"><div class="toggle-thumb"></div></div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- ADMIN TABS (hidden for students) -->
+<div class="admin-tabs" id="adminTabs" style="display:none;">
+  <button class="admin-tab active" onclick="showAdminTab('lectures')">📹 Lectures</button>
+  <button class="admin-tab" onclick="showAdminTab('students')">👥 Students</button>
+</div>
+
+<!-- LOADING -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <div>Loading your dashboard…</div>
+</div>
+
+<!-- ADMIN: LECTURES TAB -->
+<div id="tabLectures" style="display:none;">
+  <div class="main">
+    <div class="two-col">
+      <!-- Add/Edit Lecture -->
+      <div class="card">
+        <div class="card-title"><div class="card-dot"></div><span id="lecFormTitle">Add New Lecture</span></div>
+        <input type="hidden" id="editLecId">
+        <div class="form-group">
+          <label class="form-label">Lecture Title</label>
+          <input class="form-input" type="text" id="lecTitle" placeholder="e.g. Revenue Cloud Basics">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description (optional)</label>
+          <input class="form-input" type="text" id="lecDesc" placeholder="Brief description">
+        </div>
+        <div class="form-group">
+          <label class="form-label">OneDrive Video URL</label>
+          <input class="form-input" type="url" id="lecUrl" placeholder="https://1drv.ms/v/...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sort Order (number)</label>
+          <input class="form-input" type="number" id="lecOrder" placeholder="1" value="0">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary" id="btnSaveLec" onclick="saveLecture()" style="flex:1;">Save Lecture</button>
+          <button class="btn-sm" id="btnCancelLec" onclick="cancelEditLec()" style="display:none;padding:13px 16px;">Cancel</button>
+        </div>
+        <div class="msg error" id="lecError"></div>
+        <div class="msg success" id="lecSuccess"></div>
+      </div>
+      <!-- Lectures List -->
+      <div class="card">
+        <div class="table-header">
+          <div class="card-title" style="margin-bottom:0;"><div class="card-dot"></div>All Lectures</div>
+          <span class="count-badge" id="lecCount">0 lectures</span>
+        </div>
+        <div id="lecturesTableWrap">
+          <div class="empty"><div class="empty-icon">🎬</div><div class="empty-text">No lectures yet. Add your first one.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN: STUDENTS TAB -->
+<div id="tabStudents" style="display:none;">
+  <div class="main">
+    <div class="two-col">
+      <!-- Create Student -->
+      <div class="card">
+        <div class="card-title"><div class="card-dot"></div>Create Student</div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" type="text" id="stuUsername" placeholder="e.g. rahul_sharma" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" type="text" id="stuFullName" placeholder="Rahul Sharma">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email (optional)</label>
+          <input class="form-input" type="email" id="stuEmail" placeholder="rahul@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="stuPassword" placeholder="Set a secure password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign Lectures</label>
+          <div class="select-row">
+            <button class="btn-sm" onclick="checkAll('createLecChecks', true)">All</button>
+            <button class="btn-sm" onclick="checkAll('createLecChecks', false)">None</button>
+          </div>
+          <div class="checkbox-grid" id="createLecChecks"></div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn-primary" onclick="createStudent()">Create Student Account</button>
+        <div class="msg error" id="createStuErr"></div>
+        <div class="msg success" id="createStuOk"></div>
+      </div>
+      <!-- Students List -->
+      <div class="card">
+        <div class="table-header">
+          <div class="card-title" style="margin-bottom:0;"><div class="card-dot"></div>All Students</div>
+          <span class="count-badge" id="stuCount">0 students</span>
+        </div>
+        <div class="search-row">
+          <input class="search-input" type="text" id="stuSearch" placeholder="Search by username…" oninput="filterStudents()">
+        </div>
+        <div id="studentsTableWrap">
+          <div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No students yet.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT: MY LECTURES -->
+<div id="viewStudent" style="display:none;">
+  <div class="main">
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:-0.5px;">Your Lectures</div>
+      <div style="font-size:14px;color:var(--text3);margin-top:4px;">Click any lecture to start watching</div>
+    </div>
+    <div class="lectures-grid" id="lecturesGrid"></div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-controls">
+        <button class="modal-btn" onclick="toggleFullscreen()" title="Fullscreen">
+          <svg id="fsIcon" viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 13h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg>
+        </button>
+        <button class="modal-btn" onclick="closeVideo()">✕</button>
+      </div>
+    </div>
+    <div class="video-wrapper" id="videoWrapper">
+      <iframe id="videoFrame" allow="autoplay; encrypted-media; fullscreen" allowfullscreen
+        sandbox="allow-scripts allow-same-origin allow-forms" referrerpolicy="no-referrer"></iframe>
+      <div class="toolbar-shield" oncontextmenu="return false;" onclick="return false;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN BLOCK -->
+<div class="screen-block" id="screenBlock">
+  <div class="screen-block-icon">🔒</div>
+  <div class="screen-block-title" id="sbTitle">Recording Blocked</div>
+  <div class="screen-block-sub" id="sbSub">Screen recording / capture is not allowed.</div>
+  <button class="btn-resume visible" id="btnResume" onclick="resumeVideo()">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Resume Video
+  </button>
+</div>
+
+<!-- EDIT STUDENT LECTURES MODAL -->
+<div class="edit-overlay" id="editStuModal">
+  <div class="edit-modal">
+    <div class="edit-modal-title">
+      <span>Edit Lecture Access — <em id="editStuName" style="color:var(--accent);font-style:normal;font-size:15px;"></em></span>
+      <button class="close-x" onclick="closeEditStu()">✕</button>
+    </div>
+    <div class="select-row">
+      <button class="btn-sm" onclick="checkAll('editLecChecks', true)">All</button>
+      <button class="btn-sm" onclick="checkAll('editLecChecks', false)">None</button>
+    </div>
+    <div class="checkbox-grid" id="editLecChecks"></div>
+    <div class="divider"></div>
+    <button class="btn-primary" onclick="saveEditStu()">Save Changes</button>
+    <div class="msg success" id="editStuOk"></div>
+  </div>
+</div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────
+const token    = sessionStorage.getItem('kreya_v2_token');
+const role     = sessionStorage.getItem('kreya_v2_role');
+const username = sessionStorage.getItem('kreya_v2_username') || '';
+const fullName = sessionStorage.getItem('kreya_v2_fullname') || username;
+
+if (!token || !role) { window.location.href = '/kreya'; }
+
+// ── THEME ─────────────────────────────────────────────
+let isDark = localStorage.getItem('kreya_v2_theme') === 'dark';
+function setTheme(d) {
+  isDark = d;
+  document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+  document.getElementById('themeTrack').classList.toggle('on', d);
+  document.getElementById('themeLabel').textContent = d ? 'Dark' : 'Light';
+  localStorage.setItem('kreya_v2_theme', d ? 'dark' : 'light');
+}
+function toggleTheme() { setTheme(!isDark); }
+if (isDark) setTheme(true);
+
+// ── TOPBAR ────────────────────────────────────────────
+document.getElementById('topbarName').textContent = fullName || username;
+const rb = document.getElementById('roleBadge');
+if (role === 'admin') { rb.textContent = 'Admin'; } else { rb.textContent = 'Student'; rb.classList.add('student'); }
+
+// ── API HELPER ────────────────────────────────────────
+const hdr = () => ({ 'Content-Type': 'application/json', [`x-${role}-token`]: token });
+
+async function api(method, path, body) {
+  const res = await fetch('/kreya/api' + path, {
+    method, headers: hdr(), body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json();
+  if (!res.ok) { if (res.status === 401) { logout(); } throw new Error(data.error || 'Error'); }
+  return data;
+}
+
+async function logout() {
+  try { await api('POST', '/logout'); } catch(e) {}
+  sessionStorage.clear();
+  window.location.href = '/kreya';
+}
+
+// ── STATE ─────────────────────────────────────────────
+let allLectures = [];
+let allStudents = [];
+let editingStuId = null;
+let videoPlaying = false;
+let currentLecId = null;
+let isFullscreen = false;
+
+// ── INIT ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  if (role === 'admin') {
+    document.getElementById('adminTabs').style.display = 'flex';
+    await loadLectures();
+    renderLecturesTab();
+    populateCreateChecks();
+    document.getElementById('loadingScreen').style.display = 'none';
+    showAdminTab('lectures');
+  } else {
+    await loadStudentLectures();
+  }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+});
+
+// ══════════════════════════════════════════════════════
+// ADMIN TABS
+// ══════════════════════════════════════════════════════
+function showAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='lectures') || (i===1 && tab==='students'));
+  });
+  document.getElementById('tabLectures').style.display = tab==='lectures' ? 'block' : 'none';
+  document.getElementById('tabStudents').style.display = tab==='students' ? 'block' : 'none';
+  if (tab === 'students' && !allStudents.length) loadStudents();
+}
+
+// ══════════════════════════════════════════════════════
+// LECTURES (ADMIN)
+// ══════════════════════════════════════════════════════
+async function loadLectures() {
+  try { const d = await api('GET', '/admin/lectures'); allLectures = d.lectures || []; }
+  catch(e) { allLectures = []; }
+}
+
+function renderLecturesTab() {
+  const wrap = document.getElementById('lecturesTableWrap');
+  document.getElementById('lecCount').textContent = allLectures.length + ' lecture' + (allLectures.length !== 1 ? 's' : '');
+  if (!allLectures.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-icon">🎬</div><div class="empty-text">No lectures yet. Add your first one.</div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<table class="data-table">
+    <thead><tr><th>#</th><th>Title</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    ${allLectures.map(l => `<tr>
+      <td style="color:var(--text3);font-size:12px;">${l.id}</td>
+      <td><strong>${esc(l.title)}</strong>${l.description?`<br><span style="font-size:12px;color:var(--text3);">${esc(l.description)}</span>`:''}</td>
+      <td style="color:var(--text3);">${l.sort_order}</td>
+      <td><span class="status-badge ${l.is_active?'active':'inactive'}"><span class="status-dot"></span>${l.is_active?'Active':'Hidden'}</span></td>
+      <td><div class="action-row">
+        <button class="btn-sm" onclick="editLec(${l.id})">Edit</button>
+        <button class="btn-sm danger" onclick="deleteLec(${l.id})">Delete</button>
+      </div></td>
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+
+async function saveLecture() {
+  const id    = document.getElementById('editLecId').value;
+  const title = document.getElementById('lecTitle').value.trim();
+  const desc  = document.getElementById('lecDesc').value.trim();
+  const url   = document.getElementById('lecUrl').value.trim();
+  const order = parseInt(document.getElementById('lecOrder').value) || 0;
+  const err   = document.getElementById('lecError');
+  const ok    = document.getElementById('lecSuccess');
+  err.classList.remove('show'); ok.classList.remove('show');
+  if (!title || !url) { err.textContent = 'Title and OneDrive URL are required.'; err.classList.add('show'); return; }
+  try {
+    const btn = document.getElementById('btnSaveLec');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Saving…';
+    if (id) {
+      await api('PUT', '/admin/lectures/' + id, { title, description: desc, onedrive_url: url, sort_order: order, is_active: true });
+    } else {
+      await api('POST', '/admin/lectures', { title, description: desc, onedrive_url: url, sort_order: order });
+    }
+    await loadLectures();
+    renderLecturesTab();
+    populateCreateChecks();
+    cancelEditLec();
+    ok.textContent = id ? 'Lecture updated!' : 'Lecture added!';
+    ok.classList.add('show');
+    setTimeout(() => ok.classList.remove('show'), 3000);
+  } catch(e) {
+    err.textContent = e.message; err.classList.add('show');
+  } finally {
+    const btn = document.getElementById('btnSaveLec');
+    btn.disabled = false; btn.innerHTML = 'Save Lecture';
+  }
+}
+
+function editLec(id) {
+  const l = allLectures.find(x => x.id === id); if (!l) return;
+  document.getElementById('editLecId').value  = l.id;
+  document.getElementById('lecTitle').value   = l.title;
+  document.getElementById('lecDesc').value    = l.description || '';
+  document.getElementById('lecUrl').value     = l.onedrive_url;
+  document.getElementById('lecOrder').value   = l.sort_order;
+  document.getElementById('lecFormTitle').textContent = 'Edit Lecture';
+  document.getElementById('btnCancelLec').style.display = '';
+  document.getElementById('lecTitle').focus();
+}
+function cancelEditLec() {
+  document.getElementById('editLecId').value = '';
+  document.getElementById('lecTitle').value  = '';
+  document.getElementById('lecDesc').value   = '';
+  document.getElementById('lecUrl').value    = '';
+  document.getElementById('lecOrder').value  = '0';
+  document.getElementById('lecFormTitle').textContent = 'Add New Lecture';
+  document.getElementById('btnCancelLec').style.display = 'none';
+}
+async function deleteLec(id) {
+  const l = allLectures.find(x => x.id === id);
+  if (!confirm(`Delete lecture "${l ? l.title : id}"? This will remove student access too.`)) return;
+  try {
+    await api('DELETE', '/admin/lectures/' + id);
+    await loadLectures(); renderLecturesTab(); populateCreateChecks();
+  } catch(e) { alert(e.message); }
+}
+
+function populateCreateChecks() {
+  buildCheckboxes('createLecChecks', allLectures, []);
+}
+
+// ══════════════════════════════════════════════════════
+// STUDENTS (ADMIN)
+// ══════════════════════════════════════════════════════
+async function loadStudents() {
+  try { const d = await api('GET', '/admin/students'); allStudents = d.students || []; renderStudentsTab(); }
+  catch(e) { allStudents = []; }
+}
+
+function renderStudentsTab() {
+  const wrap = document.getElementById('studentsTableWrap');
+  const q    = document.getElementById('stuSearch').value.toLowerCase();
+  const list = q ? allStudents.filter(s => s.username.toLowerCase().includes(q) || (s.full_name||'').toLowerCase().includes(q)) : allStudents;
+  document.getElementById('stuCount').textContent = allStudents.length + ' student' + (allStudents.length !== 1 ? 's' : '');
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">${q ? 'No results found.' : 'No students yet.'}</div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<table class="data-table">
+    <thead><tr><th>Student</th><th>Lectures</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+    <tbody>
+    ${list.map(s => `<tr>
+      <td><strong>${esc(s.username)}</strong>${s.full_name?`<br><span style="font-size:12px;color:var(--text3);">${esc(s.full_name)}</span>`:''}</td>
+      <td><span class="pill" onclick="openEditStu(${s.id}, '${esc(s.username)}')">${(s.lecture_ids||[]).length} lectures ✏️</span></td>
+      <td><span class="status-badge ${s.is_active?'active':'inactive'}"><span class="status-dot"></span>${s.is_active?'Active':'Disabled'}</span></td>
+      <td style="font-size:12px;color:var(--text3);">${s.last_login ? new Date(s.last_login).toLocaleDateString('en-IN') : 'Never'}</td>
+      <td><div class="action-row">
+        ${s.is_active
+          ? `<button class="btn-sm danger" onclick="toggleStu(${s.id}, false)">Disable</button>`
+          : `<button class="btn-sm success" onclick="toggleStu(${s.id}, true)">Enable</button>`}
+        <button class="btn-sm danger" onclick="deleteStu(${s.id}, '${esc(s.username)}')">Delete</button>
+      </div></td>
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+function filterStudents() { renderStudentsTab(); }
+
+async function createStudent() {
+  const uname = document.getElementById('stuUsername').value.trim();
+  const fname = document.getElementById('stuFullName').value.trim();
+  const email = document.getElementById('stuEmail').value.trim();
+  const pass  = document.getElementById('stuPassword').value;
+  const lids  = getChecked('createLecChecks');
+  const err   = document.getElementById('createStuErr');
+  const ok    = document.getElementById('createStuOk');
+  err.classList.remove('show'); ok.classList.remove('show');
+  if (!uname || !pass) { err.textContent = 'Username and password are required.'; err.classList.add('show'); return; }
+  try {
+    await api('POST', '/admin/students', { username: uname, password: pass, email, full_name: fname, lecture_ids: lids });
+    await loadStudents(); renderStudentsTab();
+    document.getElementById('stuUsername').value = '';
+    document.getElementById('stuFullName').value = '';
+    document.getElementById('stuEmail').value    = '';
+    document.getElementById('stuPassword').value = '';
+    checkAll('createLecChecks', false);
+    ok.textContent = `Student "${uname}" created!`; ok.classList.add('show');
+    setTimeout(() => ok.classList.remove('show'), 3000);
+  } catch(e) {
+    err.textContent = e.message; err.classList.add('show');
+  }
+}
+
+async function toggleStu(id, active) {
+  try { await api('PUT', '/admin/students/' + id, { is_active: active }); await loadStudents(); renderStudentsTab(); }
+  catch(e) { alert(e.message); }
+}
+async function deleteStu(id, name) {
+  if (!confirm(`Delete student "${name}"? This cannot be undone.`)) return;
+  try { await api('DELETE', '/admin/students/' + id); await loadStudents(); renderStudentsTab(); }
+  catch(e) { alert(e.message); }
+}
+
+function openEditStu(id, name) {
+  editingStuId = id;
+  document.getElementById('editStuName').textContent = name;
+  const stu = allStudents.find(s => s.id === id);
+  buildCheckboxes('editLecChecks', allLectures, stu ? (stu.lecture_ids || []) : []);
+  document.getElementById('editStuModal').classList.add('active');
+}
+function closeEditStu() { document.getElementById('editStuModal').classList.remove('active'); editingStuId = null; }
+async function saveEditStu() {
+  if (!editingStuId) return;
+  const lids = getChecked('editLecChecks');
+  try {
+    await api('PUT', '/admin/students/' + editingStuId + '/lectures', { lecture_ids: lids });
+    const stu = allStudents.find(s => s.id === editingStuId);
+    if (stu) stu.lecture_ids = lids;
+    renderStudentsTab();
+    const ok = document.getElementById('editStuOk');
+    ok.textContent = 'Saved!'; ok.classList.add('show');
+    setTimeout(() => { ok.classList.remove('show'); closeEditStu(); }, 1200);
+  } catch(e) { alert(e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+// STUDENT VIEW
+// ══════════════════════════════════════════════════════
+async function loadStudentLectures() {
+  try {
+    const d = await api('GET', '/student/lectures');
+    allLectures = d.lectures || [];
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('viewStudent').style.display = 'block';
+    renderStudentLectures();
+  } catch(e) {
+    document.getElementById('loadingScreen').innerHTML = '<div style="color:var(--accent)">Failed to load. Please refresh.</div>';
+  }
+}
+
+function renderStudentLectures() {
+  const grid = document.getElementById('lecturesGrid');
+  if (!allLectures.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📭</div><div class="empty-text">No lectures assigned yet. Contact your admin.</div></div>`;
+    return;
+  }
+  grid.innerHTML = allLectures.map(l => `
+    <div class="lecture-card" onclick="openVideo(${l.id}, '${esc(l.title)}')">
+      <div class="lecture-thumb">
+        <span class="lec-num">Lecture ${l.sort_order || l.id}</span>
+        <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="lecture-info">
+        <div class="lecture-title">${esc(l.title)}</div>
+        <div class="lecture-desc">${l.description ? esc(l.description) : 'Click to play'}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// VIDEO PLAYER
+// ══════════════════════════════════════════════════════
+async function openVideo(id, title) {
+  currentLecId = id;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('videoFrame').src = '';
+  document.getElementById('videoModal').classList.add('active');
+  document.getElementById('btnResume').classList.remove('visible');
+  try {
+    const d = await api('GET', '/student/video/' + id);
+    document.getElementById('videoFrame').src = d.embedUrl;
+    videoPlaying = true;
+  } catch(e) {
+    closeVideo();
+    alert('Could not load video. Please try again.');
+  }
+}
+function closeVideo() {
+  if (document.fullscreenElement || document.webkitFullscreenElement) exitFullscreen();
+  document.getElementById('videoModal').classList.remove('active');
+  document.getElementById('videoFrame').src = '';
+  document.getElementById('screenBlock').classList.remove('active');
+  document.getElementById('btnResume').classList.remove('visible');
+  videoPlaying = false; currentLecId = null;
+}
+function resumeVideo() {
+  if (!currentLecId) return;
+  const lec = allLectures.find(l => l.id === currentLecId);
+  if (!lec) return;
+  openVideo(currentLecId, lec.title);
+  document.getElementById('screenBlock').classList.remove('active');
+}
+function toggleFullscreen() {
+  const w = document.getElementById('videoWrapper');
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    (w.requestFullscreen || w.webkitRequestFullscreen || w.mozRequestFullScreen).call(w);
+  } else { exitFullscreen(); }
+}
+function exitFullscreen() {
+  (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+}
+function onFsChange() {
+  isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  document.getElementById('fsIcon').innerHTML = isFullscreen
+    ? '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>'
+    : '<path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 13h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/>';
+}
+
+// ══════════════════════════════════════════════════════
+// SECURITY
+// ══════════════════════════════════════════════════════
+function triggerBlock() {
+  if (!videoPlaying) return;
+  document.getElementById('videoFrame').src = '';
+  videoPlaying = false;
+  document.getElementById('sbTitle').textContent = 'Recording Blocked';
+  document.getElementById('sbSub').textContent   = 'Screen recording / capture is not allowed.';
+  document.getElementById('btnResume').classList.add('visible');
+  document.getElementById('screenBlock').classList.add('active');
+}
+if (navigator.mediaDevices) {
+  const od = navigator.mediaDevices.getDisplayMedia?.bind(navigator.mediaDevices);
+  if (od) navigator.mediaDevices.getDisplayMedia = async c => { triggerBlock(); return od(c); };
+  const ou = navigator.mediaDevices.getUserMedia?.bind(navigator.mediaDevices);
+  if (ou) navigator.mediaDevices.getUserMedia = async c => { if (c && c.video && videoPlaying) triggerBlock(); return ou(c); };
+}
+document.addEventListener('enterpictureinpicture', triggerBlock);
+setInterval(() => { if (document.pictureInPictureElement && videoPlaying) triggerBlock(); }, 500);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
+  if (e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(e.key.toUpperCase())) { e.preventDefault(); e.stopPropagation(); return false; }
+  if (e.ctrlKey && ['u','s','p'].includes(e.key.toLowerCase())) { e.preventDefault(); e.stopPropagation(); return false; }
+}, true);
+document.addEventListener('contextmenu', e => e.preventDefault(), true);
+document.addEventListener('dragstart',   e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('cut',  e => e.preventDefault());
+window.addEventListener('beforeprint', () => { document.body.style.display = 'none'; });
+window.addEventListener('afterprint',  () => { document.body.style.display = ''; });
+
+// DevTools detection
+let devOpen = false;
+function onDevOpen() {
+  if (devOpen) return; devOpen = true;
+  if (videoPlaying) { document.getElementById('videoFrame').src = ''; closeVideo(); }
+  document.body.style.filter = 'blur(20px)'; document.body.style.pointerEvents = 'none';
+}
+function onDevClose() { devOpen = false; document.body.style.filter = ''; document.body.style.pointerEvents = ''; }
+setInterval(() => { const t = performance.now(); debugger; performance.now() - t > 100 ? onDevOpen() : onDevClose(); }, 500);
+(function() {
+  let n = 0; const d = /./;
+  d.toString = () => { n++; if (n > 1) onDevOpen(); return ''; };
+  setInterval(() => { n = 0; console.log('%c', d); setTimeout(() => { if (n === 0) onDevClose(); }, 50); }, 500);
+})();
+
+// ══════════════════════════════════════════════════════
+// CHECKBOX HELPERS
+// ══════════════════════════════════════════════════════
+function buildCheckboxes(containerId, lectures, selected) {
+  const c = document.getElementById(containerId); if (!c) return;
+  if (!lectures.length) { c.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px;">No lectures available yet.</div>'; return; }
+  c.innerHTML = lectures.map(l => `
+    <label class="checkbox-item">
+      <input type="checkbox" value="${l.id}" ${selected.map(Number).includes(l.id) ? 'checked' : ''}>
+      <label>${esc(l.title)}</label>
+    </label>`).join('');
+}
+function checkAll(containerId, val) {
+  document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach(cb => cb.checked = val);
+}
+function getChecked(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map(cb => parseInt(cb.value));
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
