@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreya IT Consulting — Salesforce Training &amp; Internship</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ee; --bg2: #eceae3; --surface: #ffffff; --surface2: #f9f8f5;
+    --border: #e2dfd6; --text: #1a1814; --text2: #6b6760; --text3: #9e9b96;
+    --accent: #c84b31; --accent2: #e8693a; --accent-light: #fdf0ec;
+    --green: #2d6a4f; --green-light: #e8f5ef; --shadow: 0 2px 8px rgba(26,24,20,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,24,20,0.12); --radius: 12px; --radius-lg: 20px;
+    --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="dark"] {
+    --bg: #0f0e0c; --bg2: #1a1814; --surface: #201e1b; --surface2: #252220;
+    --border: #2e2c28; --text: #f0ede6; --text2: #a09d96; --text3: #6b6760;
+    --accent: #e8693a; --accent2: #c84b31; --accent-light: #2a1810;
+    --green: #52b788; --green-light: #0d2218;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3); --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; transition: var(--transition);
+    display: flex; flex-direction: column;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* STICKY HEADER */
+  .site-header {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand-logo {
+    width: 40px; height: 40px; border-radius: 11px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(200,75,49,0.3);
+  }
+  .brand-logo svg { width: 21px; height: 21px; fill: white; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+  .brand-text .name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.3px; color: var(--text); }
+  .brand-text .name span { color: var(--accent); }
+  .brand-text .sub { font-size: 10.5px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1px; font-weight: 500; }
+
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-link { font-size: 14px; font-weight: 500; color: var(--text2); transition: var(--transition); cursor: pointer; }
+  .nav-link:hover { color: var(--accent); }
+
+  .auth-links { display: flex; align-items: center; gap: 10px; }
+  .btn-ghost {
+    padding: 9px 18px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 13.5px; font-weight: 600; color: var(--text2);
+    transition: var(--transition); white-space: nowrap; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .btn-solid {
+    padding: 9px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 700;
+    background: var(--accent); color: white; border: none;
+    font-family: 'Syne', sans-serif; transition: var(--transition); white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(200,75,49,0.25);
+  }
+  .btn-solid:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(200,75,49,0.35); }
+
+  /* HERO */
+  .hero { padding: 80px 0 64px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ''; position: absolute; top: -25%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,75,49,0.10) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -30%; left: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,105,58,0.07) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--accent); background: var(--accent-light); border: 1px solid rgba(200,75,49,0.2);
+    padding: 7px 16px; border-radius: 20px; margin-bottom: 24px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 22px; color: var(--text);
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p.lead { font-size: 17px; color: var(--text2); line-height: 1.7; max-width: 520px; margin-bottom: 32px; font-weight: 300; }
+
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+  .btn-big {
+    padding: 15px 28px; border-radius: var(--radius); font-size: 15px; font-weight: 700;
+    font-family: 'Syne', sans-serif; display: inline-flex; align-items: center; gap: 9px;
+    transition: var(--transition); border: none; cursor: pointer;
+  }
+  .btn-big.primary { background: var(--accent); color: white; box-shadow: 0 8px 24px rgba(200,75,49,0.3); }
+  .btn-big.primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200,75,49,0.4); }
+  .btn-big.secondary { background: var(--surface); border: 1.5px solid var(--border); color: var(--text); }
+  .btn-big.secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  .hero-stats { display: flex; gap: 40px; }
+  .hero-stat .num { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: var(--accent); }
+  .hero-stat .label { font-size: 12.5px; color: var(--text3); margin-top: 2px; }
+
+  /* HERO DIAGRAM */
+  .diagram {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg);
+    min-height: 460px;
+  }
+  .diagram-head {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .diagram-head .title { font-size: 12px; color: var(--text3); letter-spacing: 1px; font-weight: 500; }
+  .diagram-head .lights { display: flex; gap: 6px; }
+  .diagram-head .lights span { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .l1 { background: #e2dfd6; } .l2 { background: #e8693a; } .l3 { background: #2d6a4f; }
+
+  .node-map { position: relative; height: 380px; }
+  .node {
+    position: absolute; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 11px 14px; font-size: 12.5px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    transition: var(--transition); cursor: default; color: var(--text);
+  }
+  .node:hover { border-color: var(--accent); transform: scale(1.04); box-shadow: var(--shadow); z-index: 5; }
+  .node .ic { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .node.core { background: var(--accent-light); border-color: var(--accent); font-weight: 700; padding: 13px 18px; }
+  .node.core .ic { background: var(--accent); }
+  .node.amber .ic { background: #e8693a; }
+  .node.green .ic { background: var(--green); }
+  .node.sky .ic { background: #5b8ac9; }
+  .node.purple .ic { background: #9b7fc4; }
+  .node.red .ic { background: #c84b31; }
+
+  .n-core { top: 155px; left: 50%; transform: translateX(-50%); }
+  .n-sales { top: 18px; left: 8px; }
+  .n-service { top: 18px; right: 8px; }
+  .n-experience { top: 90px; left: 0; }
+  .n-cpq { top: 90px; right: -6px; }
+  .n-arm { bottom: 90px; left: 2px; }
+  .n-field { bottom: 90px; right: 0; }
+  .n-agent { bottom: 14px; left: 50%; transform: translateX(-50%); }
+
+  svg.connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .connectors path { stroke: var(--border); stroke-width: 1.5; fill: none; stroke-dasharray: 4 4; }
+  .connectors path.active { stroke: var(--accent); stroke-dasharray: none; opacity: 0.4; }
+
+  /* SECTION SHARED */
+  section { padding: 84px 0; }
+  .section-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+  .section-eyebrow { font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; font-weight: 700; }
+  .section-head h2 { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; color: var(--text); }
+  .section-head p { font-size: 15.5px; color: var(--text2); line-height: 1.7; font-weight: 300; }
+
+  /* COURSES */
+  .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .course-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 28px; transition: var(--transition); position: relative; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .course-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .course-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent); transform: scaleX(0); transform-origin: left; transition: var(--transition);
+  }
+  .course-card:hover::before { transform: scaleX(1); }
+  .course-tag { font-size: 11px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; display: block; font-weight: 600; }
+  .course-icon {
+    width: 46px; height: 46px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px; font-size: 22px; background: var(--accent-light);
+  }
+  .course-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; color: var(--text); }
+  .course-card p { font-size: 13.5px; color: var(--text2); line-height: 1.65; margin-bottom: 16px; font-weight: 300; }
+  .course-topics { display: flex; flex-wrap: wrap; gap: 6px; }
+  .topic-chip { font-size: 11px; padding: 4px 10px; border-radius: 6px; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); font-weight: 500; }
+
+  /* PROCESS */
+  .process { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+  .process-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; position: relative; box-shadow: var(--shadow); }
+  .process-step .pnum {
+    font-family: 'Syne', sans-serif; font-size: 13px; color: var(--accent);
+    background: var(--accent-light); border: 1px solid rgba(200,75,49,0.2);
+    width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; font-weight: 700;
+  }
+  .process-step h4 { font-family: 'Syne', sans-serif; font-size: 15.5px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .process-step p { font-size: 13px; color: var(--text2); line-height: 1.6; font-weight: 300; }
+
+  /* CONTACT */
+  .contact-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 48px; box-shadow: var(--shadow-lg);
+  }
+  .contact-info h2 { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 14px; color: var(--text); }
+  .contact-info p { font-size: 14.5px; color: var(--text2); line-height: 1.7; margin-bottom: 28px; font-weight: 300; }
+  .contact-channels { display: flex; flex-direction: column; gap: 14px; }
+  .channel {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+    transition: var(--transition);
+  }
+  .channel:hover { border-color: var(--accent); transform: translateX(4px); background: var(--accent-light); }
+  .channel .cic {
+    width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0; background: var(--accent-light); color: var(--accent); font-weight: 700;
+  }
+  .channel .ctext .clabel { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; font-weight: 600; }
+  .channel .ctext .cvalue { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  /* LEAD FORM */
+  .lead-form .form-group { margin-bottom: 18px; }
+  .lead-form label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .lead-form input, .lead-form select, .lead-form textarea {
+    width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+    border-radius: var(--radius); background: var(--surface2); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 15px; transition: var(--transition); outline: none;
+  }
+  .lead-form input:focus, .lead-form select:focus, .lead-form textarea:focus {
+    border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(200,75,49,0.1);
+  }
+  .lead-form textarea { resize: vertical; min-height: 80px; font-family: 'DM Sans', sans-serif; }
+  .lead-form .btn-submit {
+    width: 100%; padding: 14px; background: var(--accent); color: white;
+    border: none; border-radius: var(--radius); font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: var(--transition);
+    margin-top: 8px; letter-spacing: 0.3px;
+  }
+  .lead-form .btn-submit:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,75,49,0.3); }
+  .lead-form .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .msg {
+    background: var(--accent-light); color: var(--accent);
+    border: 1px solid rgba(200,75,49,0.2); border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; margin-top: 12px; display: none; text-align: center;
+  }
+  .msg.show { display: block; }
+  .msg.success { background: var(--green-light); color: var(--green); border-color: rgba(45,106,79,0.2); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 48px 0 28px; background: var(--surface); }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+  .footer-brand .brand { margin-bottom: 12px; }
+  .footer-brand p { font-size: 13px; color: var(--text3); max-width: 320px; line-height: 1.6; font-weight: 300; }
+  .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+  .footer-col h5 { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; font-weight: 700; }
+  .footer-col a { display: block; font-size: 13.5px; color: var(--text2); margin-bottom: 10px; transition: var(--transition); }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-social { display: flex; gap: 10px; }
+  .social-btn {
+    width: 38px; height: 38px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; transition: var(--transition);
+  }
+  .social-btn:hover { border-color: var(--accent); background: var(--accent-light); transform: translateY(-2px); }
+  .social-btn svg { width: 17px; height: 17px; fill: var(--text2); }
+  .social-btn:hover svg { fill: var(--accent); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    padding-top: 24px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--text3);
+  }
+  .footer-bottom .legal-links { display: flex; gap: 20px; }
+  .footer-bottom .legal-links a:hover { color: var(--accent); }
+
+  /* MODALS */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(26,24,20,0.5);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 36px;
+    box-shadow: var(--shadow-lg); animation: modalIn 0.25s ease; position: relative;
+  }
+  @keyframes modalIn { from { opacity:0; transform: translateY(16px) scale(0.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+  .modal-box h2 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+  .modal-box .modal-sub { font-size: 12.5px; color: var(--text3); margin-bottom: 22px; }
+  .modal-box h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--accent); }
+  .modal-box p, .modal-box li { font-size: 13.5px; color: var(--text2); line-height: 1.75; font-weight: 300; }
+  .modal-box ul { padding-left: 20px; margin-bottom: 6px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 50%;
+    border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition);
+  }
+  .modal-close:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* THEME TOGGLE */
+  .theme-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .toggle-label { font-size: 12px; font-weight: 500; color: var(--text3); }
+  .toggle-track {
+    width: 44px; height: 24px; border-radius: 12px; background: var(--bg2);
+    border: 1.5px solid var(--border); position: relative; cursor: pointer; transition: var(--transition);
+  }
+  .toggle-track.on { background: var(--accent); border-color: var(--accent); }
+  .toggle-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--text3);
+    position: absolute; top: 50%; transform: translateY(-50%); left: 3px;
+    transition: var(--transition); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-track.on .toggle-thumb { left: calc(100% - 19px); background: white; }
+
+  /* RESPONSIVE */
+  @media (max-width:980px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero h1 { font-size: 40px; }
+    .course-grid { grid-template-columns: repeat(2,1fr); }
+    .process { grid-template-columns: repeat(2,1fr); }
+    .contact-wrap { grid-template-columns: 1fr; padding: 32px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width:640px) {
+    .wrap { padding: 0 18px; }
+    .hero { padding: 50px 0 40px; }
+    .hero h1 { font-size: 32px; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    .course-grid { grid-template-columns: 1fr; }
+    .process { grid-template-columns: 1fr; }
+    .auth-links { gap: 6px; }
+    .btn-ghost, .btn-solid { padding: 8px 12px; font-size: 12px; }
+    .brand-text .sub { display: none; }
+    .footer-top { flex-direction: column; }
+    .footer-links { gap: 28px; }
+    section { padding: 56px 0; }
+    .diagram { min-height: auto; padding: 18px; }
+    .node-map { height: 320px; }
+    .node { font-size: 11px; padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4a7.5 7.5 0 0 0-7.35 6.04A5.5 5.5 0 0 0 6 21h13a4.5 4.5 0 0 0 .35-10.96z"/></svg>
+      </div>
+      <div class="brand-text">
+        <div class="name">Kreya <span>IT Consulting</span></div>
+        <div class="sub">Salesforce Training &amp; Internship</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a class="nav-link" href="#courses">Courses</a>
+      <a class="nav-link" href="#why-us">Why Us</a>
+      <a class="nav-link" href="#contact">Contact</a>
+      <a class="nav-link" onclick="openModal('aboutModal')">About</a>
+    </div>
+
+    <div class="auth-links">
+      <div class="theme-toggle" onclick="toggleTheme()" style="margin-right:6px;">
+        <span class="toggle-label" id="themeLabel">Light</span>
+        <div class="toggle-track" id="themeTrack"><div class="toggle-thumb"></div></div>
+      </div>
+      <a class="btn-ghost" href="/kreya">Student Login</a>
+      <a class="btn-solid" href="/kreya/admin">Admin Login</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Live Cohorts Enrolling — Hands-on Salesforce Training</div>
+      <h1>Build a career on the <span class="accent">Salesforce Revenue Cloud</span> &amp; Agentforce ecosystem</h1>
+      <p class="lead">Kreya IT Consulting trains future-ready Salesforce professionals through project-based learning across Sales Cloud, Service Cloud, Experience Cloud, CPQ, Agentforce, ARM and Field Service — backed by real client scenarios and internship placement support.</p>
+      <div class="hero-ctas">
+        <a class="btn-big primary" href="#contact">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          Get Course Details
+        </a>
+        <a class="btn-big secondary" href="https://wa.me/919582388885" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.07-1.33A9.95 9.95 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.3 1.18-1.78 1.25-.46.07-1.03.1-1.66-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.44-1.08-2.74 0-1.3.68-1.94.92-2.2.24-.27.53-.34.7-.34h.5c.16 0 .38-.01.59.45.22.48.74 1.8.8 1.93.07.13.11.28.02.45-.49.97-1 .94-.7 1.45.8 1.36 1.6 1.92 2.86 2.55.21.1.34.09.46-.04.13-.13.55-.64.7-.86.15-.22.3-.18.5-.11.2.08 1.27.6 1.49.71.22.11.36.16.42.26.06.1.06.55-.16 1.17z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">7+</div><div class="label">Salesforce Cloud Tracks</div></div>
+        <div class="hero-stat"><div class="num">100%</div><div class="label">Hands-on Project Work</div></div>
+        <div class="hero-stat"><div class="num">1:1</div><div class="label">Mentor-led Sessions</div></div>
+      </div>
+    </div>
+
+    <div class="diagram">
+      <div class="diagram-head">
+        <span class="title">Kreya Training Stack — Architecture Overview</span>
+        <div class="lights"><span class="l1"></span><span class="l2"></span><span class="l3"></span></div>
+      </div>
+      <div class="node-map">
+        <svg class="connectors" viewBox="0 0 400 380" preserveAspectRatio="none">
+          <path class="active" d="M 200 175 L 60 35"/>
+          <path class="active" d="M 200 175 L 340 35"/>
+          <path d="M 200 175 L 30 105"/>
+          <path d="M 200 175 L 370 95"/>
+          <path d="M 200 175 L 40 290"/>
+          <path d="M 200 175 L 360 290"/>
+          <path class="active" d="M 200 175 L 200 345"/>
+        </svg>
+        <div class="node core n-core"><span class="ic"></span> Revenue Cloud Advanced</div>
+        <div class="node sky n-sales"><span class="ic"></span> Sales Cloud</div>
+        <div class="node green n-service"><span class="ic"></span> Service Cloud</div>
+        <div class="node purple n-experience"><span class="ic"></span> Experience Cloud</div>
+        <div class="node amber n-cpq"><span class="ic"></span> CPQ</div>
+        <div class="node red n-arm"><span class="ic"></span> Agentforce Revenue Mgmt</div>
+        <div class="node green n-field"><span class="ic"></span> Field Service</div>
+        <div class="node core n-agent"><span class="ic"></span> Agentforce AI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="courses">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Training Tracks</div>
+      <h2>Master the clouds that run modern enterprises</h2>
+      <p>Each track combines core configuration concepts, real org walkthroughs, and capstone projects modeled on live client implementations.</p>
+    </div>
+    <div class="course-grid">
+
+      <div class="course-card">
+        <span class="course-tag">Track 01</span>
+        <div class="course-icon">☁️</div>
+        <h3>Sales Cloud</h3>
+        <p>Lead-to-opportunity lifecycle, pipeline management, forecasting, automation with Flows, and reporting dashboards for sales teams.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Leads &amp; Opportunities</span>
+          <span class="topic-chip">Flow Automation</span>
+          <span class="topic-chip">Forecasting</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 02</span>
+        <div class="course-icon">🎧</div>
+        <h3>Service Cloud</h3>
+        <p>Case management, omni-channel routing, knowledge base, entitlements and SLAs to run a complete support desk.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Case Management</span>
+          <span class="topic-chip">Omni-Channel</span>
+          <span class="topic-chip">Knowledge</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 03</span>
+        <div class="course-icon">🌐</div>
+        <h3>Experience Cloud</h3>
+        <p>Build branded portals for customers and partners — community templates, sharing rules, and self-service workflows.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Portals</span>
+          <span class="topic-chip">Sharing Sets</span>
+          <span class="topic-chip">Branding</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 04</span>
+        <div class="course-icon">💰</div>
+        <h3>CPQ (Configure, Price, Quote)</h3>
+        <p>Product bundles, pricing rules, discount schedules, approval flows, and quote-to-contract automation.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Price Rules</span>
+          <span class="topic-chip">Bundles</span>
+          <span class="topic-chip">Approvals</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 05</span>
+        <div class="course-icon">📊</div>
+        <h3>Agentforce Revenue Mgmt (ARM)</h3>
+        <p>Revenue Cloud Advanced deep-dive — ProRate Multipliers, Price Waterfall, selling models, proration &amp; billing anchor dates.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Price Waterfall</span>
+          <span class="topic-chip">Proration</span>
+          <span class="topic-chip">Selling Models</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 06</span>
+        <div class="course-icon">🤖</div>
+        <h3>Agentforce</h3>
+        <p>Design and deploy autonomous AI agents — topics, actions, and grounding with your org's data and processes.</p>
+        <div class="course-topics">
+          <span class="topic-chip">AI Agents</span>
+          <span class="topic-chip">Topics &amp; Actions</span>
+          <span class="topic-chip">Data Grounding</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Track 07</span>
+        <div class="course-icon">🛠️</div>
+        <h3>Field Service</h3>
+        <p>Work order management, scheduling optimization, mobile workforce enablement and inventory tracking.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Scheduling</span>
+          <span class="topic-chip">Work Orders</span>
+          <span class="topic-chip">Mobile App</span>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <span class="course-tag">Program</span>
+        <div class="course-icon">🎓</div>
+        <h3>Internship Program</h3>
+        <p>Apply everything you've learned on simulated client projects with mentorship, code reviews and a certificate of completion.</p>
+        <div class="course-topics">
+          <span class="topic-chip">Live Projects</span>
+          <span class="topic-chip">Mentorship</span>
+          <span class="topic-chip">Certificate</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="why-us" style="background:var(--bg2);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">How It Works</div>
+      <h2>From enrollment to job-ready, in four steps</h2>
+      <p>A structured path designed by consultants who work on real Salesforce implementations every day.</p>
+    </div>
+    <div class="process">
+      <div class="process-step">
+        <div class="pnum">01</div>
+        <h4>Enroll &amp; Assess</h4>
+        <p>Share your background via the contact form — we recommend the right track and batch timing for you.</p>
+      </div>
+      <div class="process-step">
+        <div class="pnum">02</div>
+        <h4>Guided Learning</h4>
+        <p>Access recorded + live sessions through your personal student portal, organized lecture by lecture.</p>
+      </div>
+      <div class="process-step">
+        <div class="pnum">03</div>
+        <h4>Hands-on Projects</h4>
+        <p>Configure real orgs across Sales, Service, CPQ and Agentforce based on client-style requirements.</p>
+      </div>
+      <div class="process-step">
+        <div class="pnum">04</div>
+        <h4>Internship &amp; Certification</h4>
+        <p>Top performers move into our internship program and receive a certificate plus portfolio projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Get In Touch</div>
+      <h2>Have questions about a course or batch?</h2>
+      <p>Reach out directly or send us your details and we'll get back to you within 24 hours.</p>
+    </div>
+
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h2>Talk to our training team</h2>
+        <p>Whether you're exploring a career switch into Salesforce, upskilling for CPQ/Agentforce, or looking for an internship — we're here to help you pick the right track.</p>
+        <div class="contact-channels">
+          <a class="channel" href="mailto:amul@kreyaconsulting.com">
+            <div class="cic">✉️</div>
+            <div class="ctext"><div class="clabel">Email</div><div class="cvalue">amul@kreyaconsulting.com</div></div>
+          </a>
+          <a class="channel" href="https://wa.me/919582388885" target="_blank">
+            <div class="cic">💬</div>
+            <div class="ctext"><div class="clabel">WhatsApp</div><div class="cvalue">Chat with us instantly</div></div>
+          </a>
+          <a class="channel" href="https://www.linkedin.com/in/amulbarnwal" target="_blank">
+            <div class="cic">in</div>
+            <div class="ctext"><div class="clabel">LinkedIn</div><div class="cvalue">Kreya IT Consulting</div></div>
+          </a>
+          <a class="channel" href="https://youtube.com/@cpqhours" target="_blank">
+            <div class="cic">▶</div>
+            <div class="ctext"><div class="clabel">YouTube</div><div class="cvalue">Free Salesforce tutorials</div></div>
+          </a>
+        </div>
+      </div>
+
+      <div class="lead-form">
+        <form id="leadForm" onsubmit="submitLead(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="leadName" required placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="leadEmail" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" id="leadPhone" required placeholder="+91 98765 43210">
+          </div>
+          <div class="form-group">
+            <label>Interested Course</label>
+            <select id="leadCourse">
+              <option>Sales Cloud</option>
+              <option>Service Cloud</option>
+              <option>Experience Cloud</option>
+              <option>CPQ</option>
+              <option>Agentforce Revenue Management (ARM)</option>
+              <option>Agentforce</option>
+              <option>Field Service</option>
+              <option>Internship Program</option>
+              <option>Not sure — please advise</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message (optional)</label>
+            <textarea id="leadMessage" placeholder="Tell us about your background or questions…"></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="leadSubmitBtn">Submit Enquiry</button>
+          <div class="msg" id="leadMsg"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4a7.5 7.5 0 0 0-7.35 6.04A5.5 5.5 0 0 0 6 21h13a4.5 4.5 0 0 0 .35-10.96z"/></svg>
+          </div>
+          <div class="brand-text">
+            <div class="name">Kreya <span>IT Consulting</span></div>
+            <div class="sub">Salesforce Training &amp; Internship</div>
+          </div>
+        </div>
+        <p>Practical, project-based Salesforce training across Sales Cloud, Service Cloud, Experience Cloud, CPQ, Agentforce, ARM and Field Service — with internship placement support.</p>
+        <div class="footer-social" style="margin-top:18px;">
+          <a class="social-btn" href="https://www.linkedin.com/in/amulbarnwal" target="_blank" title="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+          </a>
+          <a class="social-btn" href="https://youtube.com/@cpqhours" target="_blank" title="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M23.5 6.2a2.97 2.97 0 0 0-2.1-2.1C19.4 3.6 12 3.6 12 3.6s-7.4 0-9.4.5A2.97 2.97 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 2.97 2.97 0 0 0 2.1 2.1c2 .5 9.4.5 9.4.5s7.4 0 9.4-.5a2.97 2.97 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Courses</h5>
+          <a href="#courses">Sales Cloud</a>
+          <a href="#courses">Service Cloud</a>
+          <a href="#courses">CPQ</a>
+          <a href="#courses">Agentforce</a>
+        </div>
+        <div class="footer-col">
+          <h5>Portal</h5>
+          <a href="/kreya">Student Login</a>
+          <a href="/kreya/admin">Admin Login</a>
+          <a href="#contact">Contact Us</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="openModal('aboutModal')">About Us</a>
+          <a onclick="openModal('termsModal')">Terms &amp; Conditions</a>
+          <a href="mailto:amul@kreyaconsulting.com">Email Us</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> Kreya IT Consulting Pvt Ltd. All rights reserved.</div>
+      <div class="legal-links">
+        <a onclick="openModal('aboutModal')">About Us</a>
+        <a onclick="openModal('termsModal')">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('aboutModal')">✕</button>
+    <h2>About Kreya IT Consulting</h2>
+    <div class="modal-sub">Salesforce Training, Consulting &amp; Internship Programs</div>
+    <p>Kreya IT Consulting Pvt Ltd is a Salesforce-focused training and consulting practice. We work with learners at every stage — from absolute beginners to working professionals upskilling into Revenue Cloud Advanced and Agentforce — and pair every course with practical, project-based learning drawn from real client implementations.</p>
+    <h4>What we offer</h4>
+    <ul>
+      <li>Structured live and recorded training across Sales Cloud, Service Cloud, Experience Cloud, CPQ, ARM, Agentforce and Field Service</li>
+      <li>A dedicated student portal for secure, on-demand access to lecture recordings</li>
+      <li>An internship program for learners ready to work on simulated client projects</li>
+      <li>Implementation and configuration consulting for Salesforce Revenue Cloud Advanced</li>
+    </ul>
+    <h4>Why learners choose us</h4>
+    <p>Our training is led by consultants who configure these exact Salesforce clouds for clients — so what you learn maps directly to what's expected on the job. Every track ends with a portfolio-ready project.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="termsModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('termsModal')">✕</button>
+    <h2>Terms &amp; Conditions</h2>
+    <div class="modal-sub">Please review before enrolling</div>
+    <h4>1. Enrollment &amp; Payments</h4>
+    <p>Course fees, once paid, are non-refundable except where required by law. Batch start dates are confirmed only after payment is received and acknowledged.</p>
+    <h4>2. Access to Training Content</h4>
+    <p>Login credentials issued for the student portal are for individual use only. Sharing credentials, downloading, recording, or redistributing video content is strictly prohibited and may result in immediate access termination without refund.</p>
+    <h4>3. Internship Program</h4>
+    <p>Internship placements are based on performance during the training program and are not guaranteed for all enrolled students. Internship projects are simulated and for learning purposes unless explicitly stated as client-facing.</p>
+    <h4>4. Intellectual Property</h4>
+    <p>All training material, recordings, presentations and project templates remain the intellectual property of Kreya IT Consulting Pvt Ltd and may not be reproduced or distributed without written consent.</p>
+    <h4>5. Code of Conduct</h4>
+    <p>Students are expected to engage respectfully with instructors and peers. Kreya IT Consulting reserves the right to remove any student from a batch for conduct violations without refund.</p>
+    <h4>6. Changes to Terms</h4>
+    <p>These terms may be updated from time to time. Continued use of the portal after changes constitutes acceptance of the revised terms.</p>
+    <h4>7. Contact</h4>
+    <p>For any questions regarding these terms, write to us at amul@kreyaconsulting.com.</p>
+  </div>
+</div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+let isDark = localStorage.getItem('kreya_v2_theme') === 'dark';
+function setTheme(dark) {
+  isDark = dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('themeTrack').classList.toggle('on', dark);
+  document.getElementById('themeLabel').textContent = dark ? 'Dark' : 'Light';
+  localStorage.setItem('kreya_v2_theme', dark ? 'dark' : 'light');
+}
+function toggleTheme() { setTheme(!isDark); }
+if (isDark) setTheme(true);
+
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
+});
+
+async function submitLead(e) {
+  e.preventDefault();
+  const btn = document.getElementById('leadSubmitBtn');
+  const msg = document.getElementById('leadMsg');
+  msg.classList.remove('show','success');
+
+  const payload = {
+    name: document.getElementById('leadName').value.trim(),
+    email: document.getElementById('leadEmail').value.trim(),
+    phone: document.getElementById('leadPhone').value.trim(),
+    course: document.getElementById('leadCourse').value,
+    message: document.getElementById('leadMessage').value.trim()
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/kreya/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Failed');
+    msg.textContent = "Thanks! We've received your enquiry and will reach out within 24 hours.";
+    msg.classList.add('show','success');
+    document.getElementById('leadForm').reset();
+  } catch (err) {
+    msg.textContent = "Something went wrong. Please email us directly at amul@kreyaconsulting.com.";
+    msg.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Enquiry';
+  }
+}
+</script>
+</body>
+</html>
