@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kreya IT Consulting — Salesforce Training &amp; Internship</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f5f3ee; --bg2: #eceae3; --surface: #ffffff; --surface2: #f9f8f5;
@@ -99,8 +99,8 @@
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
   .hero h1 {
-    font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; line-height: 1.1;
-    letter-spacing: -1.5px; margin-bottom: 22px; color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 52px; font-weight: 700; line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 22px; color: var(--text);
   }
   .hero h1 .accent { color: var(--accent); }
   .hero p.lead { font-size: 17px; color: var(--text2); line-height: 1.7; max-width: 520px; margin-bottom: 32px; font-weight: 300; }
@@ -169,7 +169,7 @@
   section { padding: 84px 0; }
   .section-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
   .section-eyebrow { font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; font-weight: 700; }
-  .section-head h2 { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; color: var(--text); }
+  .section-head h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 14px; color: var(--text); }
   .section-head p { font-size: 15.5px; color: var(--text2); line-height: 1.7; font-weight: 300; }
 
   /* COURSES */
@@ -212,7 +212,7 @@
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
     padding: 48px; box-shadow: var(--shadow-lg);
   }
-  .contact-info h2 { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 14px; color: var(--text); }
+  .contact-info h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 14px; color: var(--text); }
   .contact-info p { font-size: 14.5px; color: var(--text2); line-height: 1.7; margin-bottom: 28px; font-weight: 300; }
   .contact-channels { display: flex; flex-direction: column; gap: 14px; }
   .channel {
@@ -375,7 +375,6 @@
         <div class="toggle-track" id="themeTrack"><div class="toggle-thumb"></div></div>
       </div>
       <a class="btn-ghost" href="/kreya">Student Login</a>
-      <a class="btn-solid" href="/kreya/admin">Admin Login</a>
     </div>
   </div>
 </header>
@@ -605,44 +604,51 @@
       </div>
 
       <div class="lead-form">
-        <form id="leadForm" onsubmit="submitLead(event)">
+        <form id="leadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00D5f000004b9Nu" method="POST" target="hiddenLeadFrame" onsubmit="onLeadSubmit(event)">
+          <input type="hidden" name="oid" value="00D5f000004b9Nu">
+          <input type="hidden" name="retURL" value="https://rcatraining.online/">
+          <input type="hidden" name="lead_source" value="Web">
+          <input type="hidden" name="company" value="Kreya LMS Access">
+
           <div class="form-group">
             <label>Full Name</label>
-            <input type="text" id="leadName" required placeholder="Your full name">
+            <input type="text" name="last_name" id="leadName" required placeholder="Your full name">
           </div>
           <div class="form-group">
             <label>Email</label>
-            <input type="email" id="leadEmail" required placeholder="you@example.com">
+            <input type="email" name="email" id="leadEmail" required placeholder="you@example.com">
           </div>
           <div class="form-group">
             <label>Phone / WhatsApp</label>
-            <input type="tel" id="leadPhone" required placeholder="+91 98765 43210">
+            <input type="tel" name="phone" id="leadPhone" required placeholder="+91 98765 43210">
           </div>
           <div class="form-group">
             <label>Interested Course</label>
-            <select id="leadCourse">
-              <option>Sales Cloud</option>
-              <option>Service Cloud</option>
-              <option>Experience Cloud</option>
-              <option>CPQ</option>
-              <option>Agentforce Revenue Management (ARM)</option>
-              <option>Agentforce</option>
-              <option>Field Service</option>
-              <option>Internship Program</option>
-              <option>Not sure — please advise</option>
+            <select name="00NKa00000qmdkv" id="leadCourse">
+              <option value="Salesforce Course">Salesforce Course (General Enquiry)</option>
+              <option value="Sales Cloud">Sales Cloud</option>
+              <option value="Service Cloud">Service Cloud</option>
+              <option value="Experience Cloud">Experience Cloud</option>
+              <option value="CPQ">CPQ</option>
+              <option value="Agentforce Revenue Management (ARM)">Agentforce Revenue Management (ARM)</option>
+              <option value="Agentforce">Agentforce</option>
+              <option value="Field Service">Field Service</option>
+              <option value="Internship Program">Internship Program</option>
             </select>
           </div>
           <div class="form-group">
             <label>Message (optional)</label>
-            <textarea id="leadMessage" placeholder="Tell us about your background or questions…"></textarea>
+            <textarea name="description" id="leadMessage" placeholder="Tell us about your background or questions…"></textarea>
           </div>
           <button type="submit" class="btn-submit" id="leadSubmitBtn">Submit Enquiry</button>
           <div class="msg" id="leadMsg"></div>
         </form>
+        <iframe name="hiddenLeadFrame" id="hiddenLeadFrame" style="display:none;"></iframe>
       </div>
     </div>
   </div>
 </section>
+
 
 <footer>
   <div class="wrap">
@@ -679,8 +685,9 @@
         <div class="footer-col">
           <h5>Portal</h5>
           <a href="/kreya">Student Login</a>
-          <a href="/kreya/admin">Admin Login</a>
           <a href="#contact">Contact Us</a>
+          <a href="/login.html" style="opacity:0.7;">RCA Training Portal Login</a>
+          <a href="/kreya/admin" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border); display:block; font-size:11.5px; color:var(--text3); letter-spacing:0.5px;">Admin Login →</a>
         </div>
         <div class="footer-col">
           <h5>Company</h5>
@@ -767,40 +774,26 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
 });
 
-async function submitLead(e) {
-  e.preventDefault();
+function onLeadSubmit(e) {
+  // Allow the real form POST to Salesforce (target=hiddenLeadFrame, no navigation)
   const btn = document.getElementById('leadSubmitBtn');
   const msg = document.getElementById('leadMsg');
-  msg.classList.remove('show','success');
-
-  const payload = {
-    name: document.getElementById('leadName').value.trim(),
-    email: document.getElementById('leadEmail').value.trim(),
-    phone: document.getElementById('leadPhone').value.trim(),
-    course: document.getElementById('leadCourse').value,
-    message: document.getElementById('leadMessage').value.trim()
-  };
+  const form = document.getElementById('leadForm');
 
   btn.disabled = true;
   btn.textContent = 'Submitting…';
 
-  try {
-    const res = await fetch('/kreya/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('Failed');
+  // After the hidden iframe loads (Salesforce has processed the POST), show success
+  const frame = document.getElementById('hiddenLeadFrame');
+  frame.onload = () => {
     msg.textContent = "Thanks! We've received your enquiry and will reach out within 24 hours.";
+    msg.classList.remove('show');
     msg.classList.add('show','success');
-    document.getElementById('leadForm').reset();
-  } catch (err) {
-    msg.textContent = "Something went wrong. Please email us directly at amul@kreyaconsulting.com.";
-    msg.classList.add('show');
-  } finally {
+    form.reset();
     btn.disabled = false;
     btn.textContent = 'Submit Enquiry';
-  }
+  };
+  // form submits normally (not prevented) — posts to Salesforce in hidden iframe
 }
 </script>
 </body>
