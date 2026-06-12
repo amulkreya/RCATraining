@@ -29,6 +29,19 @@ function makeToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+// ─── Ensure leads table exists (auto-migration, safe/no-op if present) ──
+pool.query(`
+  CREATE TABLE IF NOT EXISTS kreya_leads (
+    id         SERIAL PRIMARY KEY,
+    name       TEXT NOT NULL,
+    email      TEXT NOT NULL,
+    phone      TEXT,
+    course     TEXT,
+    message    TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )
+`).catch(err => console.error('[kreya_v2] leads table init error:', err));
+
 // ─── Helper: verify admin session ──────────────────────────
 async function requireAdmin(req, res, next) {
   const token = req.headers['x-admin-token'] || req.query.token;
@@ -72,6 +85,35 @@ router.get('/admin', (req, res) => {
 });
 router.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/kreya_dashboard.html'));
+});
+
+// GET /kreya/landing  → marketing landing page (also linked from main site if desired)
+router.get('/landing', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// POST /kreya/api/leads  → public lead capture from landing page
+router.post('/api/leads', async (req, res) => {
+  try {
+    const { name, email, phone, course, message } = req.body;
+    if (!name || !email) return res.status(400).json({ error: 'Name and email required' });
+    await pool.query(
+      `INSERT INTO kreya_leads(name, email, phone, course, message) VALUES($1,$2,$3,$4,$5)`,
+      [name, email, phone || '', course || '', message || '']
+    );
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[kreya_v2] lead submit error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /kreya/api/admin/leads  → admin view of submitted leads
+router.get('/api/admin/leads', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM kreya_leads ORDER BY created_at DESC`);
+    res.json({ leads: result.rows });
+  } catch (err) { res.status(500).json({ error: 'Server error' }); }
 });
 
 // ══════════════════════════════════════════════════════
