@@ -320,7 +320,95 @@
   }
   .toggle-track.on .toggle-thumb { left: calc(100% - 19px); background: white; }
 
-  /* RESPONSIVE */
+  /* TRUSTED BY */
+  .trusted-bar { padding: 36px 0; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .trusted-label { text-align: center; font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 24px; }
+  .trusted-logos { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .trusted-logos img { height: 32px; width: auto; max-width: 130px; object-fit: contain; filter: grayscale(1) opacity(0.55); transition: var(--transition); }
+  .trusted-logos img:hover { filter: grayscale(0) opacity(1); }
+  [data-theme="dark"] .trusted-logos img { filter: grayscale(1) opacity(0.6) brightness(1.8); }
+  [data-theme="dark"] .trusted-logos img:hover { filter: grayscale(0) opacity(1) brightness(1); }
+  @media (max-width:640px) { .trusted-logos { gap: 28px; } .trusted-logos img { height: 24px; } }
+
+  /* SALESFORCE BADGE ON COURSE CARDS */
+  .sf-badge {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700;
+    color: #00a1e0; background: rgba(0,161,224,0.08); border: 1px solid rgba(0,161,224,0.2);
+    padding: 4px 10px; border-radius: 6px; margin-bottom: 12px;
+  }
+  .sf-badge img { width: 14px; height: 14px; object-fit: contain; }
+
+  /* CPQ vs ARM COMPARISON */
+  .compare-table { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+  .compare-header { display: grid; grid-template-columns: 1fr 1.1fr 1fr; background: var(--bg2); }
+  .compare-header div { padding: 18px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; text-align: center; }
+  .compare-header .col-cpq { color: var(--text2); }
+  .compare-header .col-feature { color: var(--text); }
+  .compare-header .col-arm { color: var(--green); }
+  .compare-row { display: grid; grid-template-columns: 1fr 1.1fr 1fr; border-top: 1px solid var(--border); }
+  .compare-row > div { padding: 18px 20px; font-size: 13.5px; line-height: 1.6; }
+  .compare-row .col-cpq { color: var(--text2); background: var(--surface2); }
+  .compare-row .col-feature { color: var(--text); font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; display: flex; align-items: center; justify-content: center; background: var(--accent-light); }
+  .compare-row .col-arm { color: var(--text); background: var(--green-light); }
+  @media (max-width:768px) {
+    .compare-header, .compare-row { grid-template-columns: 1fr; }
+    .compare-header .col-feature, .compare-row .col-feature { text-align: left; justify-content: flex-start; }
+    .compare-header > div:not(:first-child), .compare-row > div:not(:first-child) { border-top: 1px solid var(--border); }
+  }
+
+  /* RCA COURSE OVERVIEW */
+  .rca-overview { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .rca-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); color: white;
+    padding: 32px 36px;
+  }
+  .rca-banner .tag { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; margin-bottom: 8px; }
+  .rca-banner h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; }
+  .rca-banner p { font-size: 14.5px; opacity: 0.92; line-height: 1.6; font-weight: 300; max-width: 640px; }
+  .rca-body { padding: 36px; }
+  .rca-body h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); margin: 28px 0 16px; }
+  .rca-body h4:first-child { margin-top: 0; }
+  .rca-days { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .rca-day {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; transition: var(--transition);
+  }
+  .rca-day:hover { border-color: var(--accent); background: var(--accent-light); }
+  .rca-day .dnum { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .rca-day .dtitle { font-size: 13.5px; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .rca-day .dsub { font-size: 12px; color: var(--text3); margin-top: 4px; line-height: 1.5; }
+
+  .rca-highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .rca-highlight {
+    display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .rca-highlight .hic { font-size: 20px; flex-shrink: 0; }
+  .rca-highlight .htext { font-size: 13px; color: var(--text2); line-height: 1.5; font-weight: 500; }
+
+  .rca-cta {
+    margin-top: 28px; padding: 24px; background: var(--bg2); border-radius: var(--radius-lg);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+  }
+  .rca-cta .ctitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .rca-cta .csub { font-size: 13px; color: var(--text2); }
+  .rca-cta .cta-contacts { display: flex; gap: 12px; flex-wrap: wrap; }
+  .rca-cta .cta-pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 9px;
+    background: var(--surface); border: 1.5px solid var(--border); font-size: 13.5px; font-weight: 600; color: var(--text);
+    transition: var(--transition);
+  }
+  .rca-cta .cta-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .rca-schedule-pill {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700;
+    color: var(--green); background: var(--green-light); border: 1px solid rgba(45,106,79,0.2);
+    padding: 6px 14px; border-radius: 20px; margin-top: 16px;
+  }
+  @media (max-width:640px) {
+    .rca-banner, .rca-body { padding: 24px; }
+    .rca-banner h3 { font-size: 21px; }
+    .rca-days { grid-template-columns: 1fr; }
+  }
   @media (max-width:980px) {
     .hero-grid { grid-template-columns: 1fr; gap: 48px; }
     .hero h1 { font-size: 40px; }
@@ -364,6 +452,7 @@
 
     <div class="nav-links">
       <a class="nav-link" href="#courses">Courses</a>
+      <a class="nav-link" href="#rca-overview">RCA Program</a>
       <a class="nav-link" href="#why-us">Why Us</a>
       <a class="nav-link" href="#contact">Contact</a>
       <a class="nav-link" onclick="openModal('aboutModal')">About</a>
@@ -430,7 +519,21 @@
   </div>
 </section>
 
+<div class="trusted-bar">
+  <div class="wrap">
+    <div class="trusted-label">Trusted By Professionals From Top Companies Worldwide</div>
+    <div class="trusted-logos">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color_RGB.svg/512px-Wipro_Primary_Logo_Color_RGB.svg.png" alt="Wipro" loading="lazy">
+      <img src="https://www.techmatrix.co/wp-content/uploads/2021/06/techmatrix-logo-white.png" alt="Techmatrix Consulting" loading="lazy" style="filter:invert(0.85) grayscale(1) opacity(0.6);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Tech_Mahindra_New_Logo.svg/512px-Tech_Mahindra_New_Logo.svg.png" alt="Tech Mahindra" loading="lazy">
+      <img src="https://www.rootshell.in/wp-content/uploads/2023/08/cropped-Rootshell-logo.png" alt="Rootshell" loading="lazy">
+      <img src="https://www.nextiva.com/content/dam/nextiva/images/logos/nextiva-logo.svg" alt="Nextiva" loading="lazy">
+    </div>
+  </div>
+</div>
+
 <section id="courses">
+
   <div class="wrap">
     <div class="section-head">
       <div class="section-eyebrow">Training Tracks</div>
@@ -441,6 +544,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 01</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">☁️</div>
         <h3>Sales Cloud</h3>
         <p>Lead-to-opportunity lifecycle, pipeline management, forecasting, automation with Flows, and reporting dashboards for sales teams.</p>
@@ -453,6 +557,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 02</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">🎧</div>
         <h3>Service Cloud</h3>
         <p>Case management, omni-channel routing, knowledge base, entitlements and SLAs to run a complete support desk.</p>
@@ -465,6 +570,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 03</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">🌐</div>
         <h3>Experience Cloud</h3>
         <p>Build branded portals for customers and partners — community templates, sharing rules, and self-service workflows.</p>
@@ -477,6 +583,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 04</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">💰</div>
         <h3>CPQ (Configure, Price, Quote)</h3>
         <p>Product bundles, pricing rules, discount schedules, approval flows, and quote-to-contract automation.</p>
@@ -489,6 +596,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 05</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">📊</div>
         <h3>Agentforce Revenue Mgmt (ARM)</h3>
         <p>Revenue Cloud Advanced deep-dive — ProRate Multipliers, Price Waterfall, selling models, proration &amp; billing anchor dates.</p>
@@ -501,6 +609,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 06</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">🤖</div>
         <h3>Agentforce</h3>
         <p>Design and deploy autonomous AI agents — topics, actions, and grounding with your org's data and processes.</p>
@@ -513,6 +622,7 @@
 
       <div class="course-card">
         <span class="course-tag">Track 07</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">🛠️</div>
         <h3>Field Service</h3>
         <p>Work order management, scheduling optimization, mobile workforce enablement and inventory tracking.</p>
@@ -525,6 +635,7 @@
 
       <div class="course-card">
         <span class="course-tag">Program</span>
+        <div class="sf-badge"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/512px-Salesforce.com_logo.svg.png" alt="Salesforce"> Salesforce Platform</div>
         <div class="course-icon">🎓</div>
         <h3>Internship Program</h3>
         <p>Apply everything you've learned on simulated client projects with mentorship, code reviews and a certificate of completion.</p>
@@ -539,7 +650,120 @@
   </div>
 </section>
 
-<section id="why-us" style="background:var(--bg2);">
+<!-- ARM vs CPQ COMPARISON -->
+<section id="arm-vs-cpq" style="background:var(--bg2);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Why Revenue Cloud Advanced</div>
+      <h2>Agentforce Revenue Management vs CPQ</h2>
+      <p>CPQ was built for selling. ARM is built for revenue — here's how the two compare across the platform.</p>
+    </div>
+    <div class="compare-table">
+      <div class="compare-header">
+        <div class="col-cpq">CPQ</div>
+        <div class="col-feature">Capability</div>
+        <div class="col-arm">ARM (Revenue Cloud Advanced)</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-cpq">Managed package</div>
+        <div class="col-feature">Architecture</div>
+        <div class="col-arm">Native to Salesforce core platform</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-cpq">SKU-based; bundle + option hierarchy</div>
+        <div class="col-feature">Product Model</div>
+        <div class="col-arm">Attribute-based; bundles with rationalized commercial catalog</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-cpq">Rules-based with sequential execution order</div>
+        <div class="col-feature">Pricing Engine</div>
+        <div class="col-arm">High-performance pricing procedures with flexible execution</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-cpq">Order creation from quotes</div>
+        <div class="col-feature">Order Management</div>
+        <div class="col-arm">Full order decomposition and orchestration (DRO)</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-cpq">Not available</div>
+        <div class="col-feature">AI Capabilities</div>
+        <div class="col-arm">Catalog, contracts, quoting &amp; renewals, consumption &amp; billing agents</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RCA COURSE OVERVIEW -->
+<section id="rca-overview">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Flagship Program</div>
+      <h2>Agentforce Revenue Management Course Overview</h2>
+      <p>A complete, day-by-day curriculum covering Salesforce Revenue Cloud Advanced (RCA) setup and implementation from scratch.</p>
+    </div>
+
+    <div class="rca-overview">
+      <div class="rca-banner">
+        <div class="tag">🚀 Fast-Track Training Program — Limited Slots Available</div>
+        <h3>Get End-to-End Knowledge of Salesforce Revenue Cloud Advanced (RCA)</h3>
+        <p>Unlock your potential in the most in-demand Salesforce module. This fast-paced training is designed for professionals looking to gain complete hands-on exposure to RCA setup and implementation from scratch.</p>
+        <div class="rca-schedule-pill">📅 Weekend &amp; Weekday batches available</div>
+      </div>
+
+      <div class="rca-body">
+        <h4>Day-wise Training Schedule</h4>
+        <div class="rca-days">
+          <div class="rca-day"><div class="dnum">Day 1</div><div class="dtitle">RCA Introduction &amp; Setup</div><div class="dsub">Background, permission sets, license assignment, backend settings, Trailheads, key articles, data model</div></div>
+          <div class="rca-day"><div class="dnum">Day 2</div><div class="dtitle">Product Catalog Management</div><div class="dsub">Product classification, categories, attributes &amp; attribute groups, product configuration rules, pricing flow basics</div></div>
+          <div class="rca-day"><div class="dnum">Day 3</div><div class="dtitle">Bundle Setup</div><div class="dsub">Static bundle, dynamic bundle, attribute-based bundle</div></div>
+          <div class="rca-day"><div class="dnum">Day 4</div><div class="dtitle">Pricing Setup — Volume &amp; Bundle</div><div class="dsub">Price waterfall, price book, price adjustment, pricing procedures &amp; steps, pricing recipe</div></div>
+          <div class="rca-day"><div class="dnum">Day 4 (contd.)</div><div class="dtitle">Pricing Procedures — Slab &amp; Attribute</div><div class="dsub">Contracted price, cost-plus markup (cost book), custom region discount matrix, debug price using API</div></div>
+          <div class="rca-day"><div class="dnum">Day 5</div><div class="dtitle">Product Rule &amp; Price Rule — Config Rule</div><div class="dsub">Bundle auto-add/auto-remove, validate &amp; require rules (error, warning, informational)</div></div>
+          <div class="rca-day"><div class="dnum">Day 6</div><div class="dtitle">Advanced Config Rules</div><div class="dsub">Set/hide attribute &amp; attribute value, set quantity, add/remove quote line, quantity validation</div></div>
+          <div class="rca-day"><div class="dnum">Day 7</div><div class="dtitle">Twin Field Mapping</div><div class="dsub">Cascading field information from top object to downstream objects</div></div>
+          <div class="rca-day"><div class="dnum">Day 8</div><div class="dtitle">Qualification &amp; Disqualification Rules</div><div class="dsub">Product qualification rules, decision table, qualification rule procedures, context definition</div></div>
+          <div class="rca-day"><div class="dnum">Day 9</div><div class="dtitle">CPQ-style Bundle Setup</div></div>
+          <div class="rca-day"><div class="dnum">Day 10</div><div class="dtitle">Derived Pricing &amp; Lifecycle</div><div class="dsub">Percent-of-total pricing, amendment quotes, renewals</div></div>
+          <div class="rca-day"><div class="dnum">Day 11</div><div class="dtitle">Hands-on: Order, Contract, Renewal, Amend</div></div>
+          <div class="rca-day"><div class="dnum">Day 12</div><div class="dtitle">Guided Selling</div></div>
+          <div class="rca-day"><div class="dnum">Day 13</div><div class="dtitle">Rate Management</div><div class="dsub">Usage-based pricing</div></div>
+          <div class="rca-day"><div class="dnum">Day 14</div><div class="dtitle">Advanced Approvals</div></div>
+          <div class="rca-day"><div class="dnum">Day 15</div><div class="dtitle">DRO — Decomposition &amp; Orchestration</div></div>
+          <div class="rca-day"><div class="dnum">Day 16</div><div class="dtitle">Advanced Configurator</div></div>
+          <div class="rca-day"><div class="dnum">Day 17</div><div class="dtitle">Ramp Deal Product</div></div>
+          <div class="rca-day"><div class="dnum">Day 18</div><div class="dtitle">Quote Template &amp; Document Generation</div></div>
+          <div class="rca-day"><div class="dnum">Day 19</div><div class="dtitle">Billing &amp; Invoicing Setup</div></div>
+          <div class="rca-day"><div class="dnum">Day 20</div><div class="dtitle">Auto Asset Renewal</div></div>
+          <div class="rca-day"><div class="dnum">Day 21</div><div class="dtitle">Doubt Session</div><div class="dsub">Open Q&amp;A, if required</div></div>
+        </div>
+
+        <h4>Training Highlights</h4>
+        <div class="rca-highlights">
+          <div class="rca-highlight"><div class="hic">💻</div><div class="htext">Fully online live sessions</div></div>
+          <div class="rca-highlight"><div class="hic">📄</div><div class="htext">Practice documents provided</div></div>
+          <div class="rca-highlight"><div class="hic">🏢</div><div class="htext">RLM org access for hands-on practice</div></div>
+          <div class="rca-highlight"><div class="hic">🎥</div><div class="htext">Session recordings shared after each class</div></div>
+          <div class="rca-highlight"><div class="hic">⚡</div><div class="htext">Fast-paced, real-world focused content</div></div>
+          <div class="rca-highlight"><div class="hic">🗓️</div><div class="htext">16 sessions total — each 1 to 1.5 hours</div></div>
+        </div>
+
+        <div class="rca-cta">
+          <div>
+            <div class="ctitle">For more information or to book your slot</div>
+            <div class="csub">Amul Barnwal — Weekend &amp; weekday batches available</div>
+          </div>
+          <div class="cta-contacts">
+            <a class="cta-pill" href="tel:+919582388885">📱 +91 95823 88885</a>
+            <a class="cta-pill" href="mailto:amul@kreyaconsulting.com">📧 amul@kreyaconsulting.com</a>
+            <a class="cta-pill" href="#contact" style="background:var(--accent); color:white; border-color:var(--accent);">Enquire Now →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
   <div class="wrap">
     <div class="section-head">
       <div class="section-eyebrow">How It Works</div>
