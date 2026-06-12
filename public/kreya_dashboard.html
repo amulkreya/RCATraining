@@ -174,10 +174,32 @@
   .loading-screen{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;color:var(--text3);}
   .loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
 
+  /* ══════════ STICKY FOOTER ══════════ */
+  body{display:flex; flex-direction:column; min-height:100vh;}
+  .page-body{flex:1;}
+  .site-footer{
+    flex-shrink:0; background:var(--surface); border-top:1px solid var(--border);
+    padding:16px 24px; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px; font-size:12.5px; color:var(--text3); position:sticky; bottom:0; z-index:40;
+  }
+  .site-footer .footer-links{display:flex; gap:18px; flex-wrap:wrap;}
+  .site-footer a{color:var(--text2); transition:var(--transition);}
+  .site-footer a:hover{color:var(--accent);}
+  .site-footer .footer-social{display:flex; gap:10px;}
+  .site-footer .social-icon{
+    width:28px; height:28px; border-radius:7px; background:var(--bg2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; transition:var(--transition);
+  }
+  .site-footer .social-icon:hover{border-color:var(--accent); background:var(--accent-light);}
+  .site-footer .social-icon svg{width:13px; height:13px; fill:var(--text2);}
+  .site-footer .social-icon:hover svg{fill:var(--accent);}
+  @media(max-width:640px){.site-footer{flex-direction:column; text-align:center; justify-content:center; position:static;}}
+
   @media(max-width:768px){.two-col{grid-template-columns:1fr;}.main{padding:20px 16px;}.topbar{padding:0 16px;}.admin-tabs{padding:0 16px;}}
 </style>
 </head>
 <body>
+<div class="page-body">
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -317,6 +339,27 @@
   </div>
 </div>
 
+</div><!-- /.page-body -->
+
+<!-- ══ STICKY FOOTER ══ -->
+<footer class="site-footer">
+  <div>© <span id="year"></span> Kreya IT Consulting Pvt Ltd</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/#contact">Contact Us</a>
+    <a href="mailto:amul@kreyaconsulting.com">amul@kreyaconsulting.com</a>
+  </div>
+  <div class="footer-social">
+    <a class="social-icon" href="https://youtube.com/@cpqhours" target="_blank" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a2.97 2.97 0 0 0-2.1-2.1C19.4 3.6 12 3.6 12 3.6s-7.4 0-9.4.5A2.97 2.97 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 2.97 2.97 0 0 0 2.1 2.1c2 .5 9.4.5 9.4.5s7.4 0 9.4-.5a2.97 2.97 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+    </a>
+    <a class="social-icon" href="https://www.linkedin.com/in/amulbarnwal" target="_blank" title="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+    </a>
+  </div>
+</footer>
+
+
 <!-- VIDEO MODAL -->
 <div class="modal-overlay" id="videoModal">
   <div class="modal-inner">
@@ -366,6 +409,8 @@
 </div>
 
 <script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
 // ── AUTH ──────────────────────────────────────────────
 const token    = sessionStorage.getItem('kreya_v2_token');
 const role     = sessionStorage.getItem('kreya_v2_role');
