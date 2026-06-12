@@ -20,9 +20,9 @@ app.use(express.json());
 // Serve only public assets (login.html allowed)
 app.use(express.static('public'));
 
-// Default route -> always open login page
+// Default route -> new landing page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/login.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 
