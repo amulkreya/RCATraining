@@ -326,6 +326,8 @@
   .trusted-logos { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
   .trusted-logos img { height: 32px; width: auto; max-width: 130px; object-fit: contain; filter: grayscale(1) opacity(0.55); transition: var(--transition); }
   .trusted-logos img:hover { filter: grayscale(0) opacity(1); }
+  .trusted-logos img.dark-logo { background: #1a1814; padding: 6px 12px; border-radius: 6px; height: 30px; filter: opacity(0.7); }
+  .trusted-logos img.dark-logo:hover { filter: opacity(1); }
   [data-theme="dark"] .trusted-logos img { filter: grayscale(1) opacity(0.6) brightness(1.8); }
   [data-theme="dark"] .trusted-logos img:hover { filter: grayscale(0) opacity(1) brightness(1); }
   @media (max-width:640px) { .trusted-logos { gap: 28px; } .trusted-logos img { height: 24px; } }
@@ -523,11 +525,11 @@
   <div class="wrap">
     <div class="trusted-label">Trusted By Professionals From Top Companies Worldwide</div>
     <div class="trusted-logos">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color_RGB.svg/512px-Wipro_Primary_Logo_Color_RGB.svg.png" alt="Wipro" loading="lazy">
-      <img src="https://www.techmatrix.co/wp-content/uploads/2021/06/techmatrix-logo-white.png" alt="Techmatrix Consulting" loading="lazy" style="filter:invert(0.85) grayscale(1) opacity(0.6);">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Tech_Mahindra_New_Logo.svg/512px-Tech_Mahindra_New_Logo.svg.png" alt="Tech Mahindra" loading="lazy">
-      <img src="https://www.rootshell.in/wp-content/uploads/2023/08/cropped-Rootshell-logo.png" alt="Rootshell" loading="lazy">
-      <img src="https://www.nextiva.com/content/dam/nextiva/images/logos/nextiva-logo.svg" alt="Nextiva" loading="lazy">
+      <img src="/images/wipro.png" alt="Wipro" loading="lazy">
+      <img src="/images/techmatrix.png" alt="Techmatrix Consulting" loading="lazy" class="dark-logo">
+      <img src="/images/techmahindra.png" alt="Tech Mahindra" loading="lazy">
+      <img src="/images/rootshell.png" alt="Rootshell" loading="lazy">
+      <img src="/images/nextiva.png" alt="Nextiva" loading="lazy">
     </div>
   </div>
 </div>
@@ -744,7 +746,7 @@
           <div class="rca-highlight"><div class="hic">🏢</div><div class="htext">RLM org access for hands-on practice</div></div>
           <div class="rca-highlight"><div class="hic">🎥</div><div class="htext">Session recordings shared after each class</div></div>
           <div class="rca-highlight"><div class="hic">⚡</div><div class="htext">Fast-paced, real-world focused content</div></div>
-          <div class="rca-highlight"><div class="hic">🗓️</div><div class="htext">16 sessions total — each 1 to 1.5 hours</div></div>
+          <div class="rca-highlight"><div class="hic">🗓️</div><div class="htext">21 sessions total — each 1 to 1.5 hours</div></div>
         </div>
 
         <div class="rca-cta">
