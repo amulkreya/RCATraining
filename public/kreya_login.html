@@ -112,9 +112,49 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
+
+  /* ══════════ STICKY HEADER / FOOTER ══════════ */
+  body{ display:flex; flex-direction:column; min-height:100vh; padding:0; }
+  .site-header{
+    position:sticky; top:0; z-index:50; height:60px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px; background:var(--surface); border-bottom:1px solid var(--border);
+    box-shadow:var(--shadow);
+  }
+  .site-header .brand-mini{display:flex; align-items:center; gap:10px; font-family:'Syne',sans-serif; font-weight:800; font-size:16px;}
+  .site-header .brand-mini span{color:var(--accent);}
+  .site-header .home-link{font-size:13px; color:var(--text2); font-weight:500; transition:var(--transition);}
+  .site-header .home-link:hover{color:var(--accent);}
+  .login-main{flex:1; display:flex; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden;}
+
+  .site-footer{
+    flex-shrink:0; background:var(--surface); border-top:1px solid var(--border);
+    padding:18px 24px; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px; font-size:12.5px; color:var(--text3);
+  }
+  .site-footer .footer-links{display:flex; gap:18px; flex-wrap:wrap;}
+  .site-footer a{color:var(--text2); transition:var(--transition);}
+  .site-footer a:hover{color:var(--accent);}
+  .site-footer .footer-social{display:flex; gap:10px;}
+  .site-footer .social-icon{
+    width:30px; height:30px; border-radius:8px; background:var(--bg2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; transition:var(--transition);
+  }
+  .site-footer .social-icon:hover{border-color:var(--accent); background:var(--accent-light);}
+  .site-footer .social-icon svg{width:14px; height:14px; fill:var(--text2);}
+  .site-footer .social-icon:hover svg{fill:var(--accent);}
+  @media(max-width:640px){.site-footer{flex-direction:column; text-align:center; justify-content:center;}}
 </style>
 </head>
 <body>
+
+<!-- ══ STICKY HEADER ══ -->
+<header class="site-header">
+  <a href="/" class="brand-mini">Kreya <span>IT Consulting</span></a>
+  <a href="/" class="home-link">← Back to Home</a>
+</header>
+
+<main class="login-main">
 <div class="bg-orb1"></div>
 <div class="bg-orb2"></div>
 
@@ -128,6 +168,7 @@
 <div class="login-card">
   <div class="brand">
     <div class="brand-logo">
+
       <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
     </div>
     <div class="brand-name">Salesforce <span>Courses</span></div>
@@ -167,8 +208,29 @@
     <div class="msg error" id="admError"></div>
   </div>
 </div>
+</main>
+
+<!-- ══ STICKY FOOTER ══ -->
+<footer class="site-footer">
+  <div>© <span id="year"></span> Kreya IT Consulting Pvt Ltd</div>
+  <div class="footer-links">
+    <a href="/#contact">Contact Us</a>
+    <a href="/#" onclick="window.location.href='/#about'; return false;">About Us</a>
+    <a href="mailto:amul@kreyaconsulting.com">amul@kreyaconsulting.com</a>
+  </div>
+  <div class="footer-social">
+    <a class="social-icon" href="https://youtube.com/@cpqhours" target="_blank" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a2.97 2.97 0 0 0-2.1-2.1C19.4 3.6 12 3.6 12 3.6s-7.4 0-9.4.5A2.97 2.97 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 2.97 2.97 0 0 0 2.1 2.1c2 .5 9.4.5 9.4.5s7.4 0 9.4-.5a2.97 2.97 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+    </a>
+    <a class="social-icon" href="https://www.linkedin.com/in/amulbarnwal" target="_blank" title="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+    </a>
+  </div>
+</footer>
+
 
 <script>
+document.getElementById('year').textContent = new Date().getFullYear();
 let isDark = localStorage.getItem('kreya_v2_theme') === 'dark';
 
 function setTheme(dark) {
