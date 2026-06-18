@@ -436,6 +436,11 @@ document.getElementById('topbarName').textContent = fullName || username;
 const rb = document.getElementById('roleBadge');
 if (role === 'admin') { rb.textContent = 'Admin'; } else { rb.textContent = 'Student'; rb.classList.add('student'); }
 
+// ── SESSION-END FLAG ──────────────────────────────────
+// Set when the server reports the session is gone, so we can show
+// the right message on the login page instead of a silent redirect.
+let sessionEnded = false;
+
 // ── API HELPER ────────────────────────────────────────
 const hdr = () => ({ 'Content-Type': 'application/json', [`x-${role}-token`]: token });
 
@@ -444,8 +449,20 @@ async function api(method, path, body) {
     method, headers: hdr(), body: body ? JSON.stringify(body) : undefined
   });
   const data = await res.json();
-  if (!res.ok) { if (res.status === 401) { logout(); } throw new Error(data.error || 'Error'); }
+  if (!res.ok) { if (res.status === 401) { handleSessionEnd(data.error); } throw new Error(data.error || 'Error'); }
   return data;
+}
+
+// Called whenever the server says our session is no longer valid (401).
+// Stops video, marks the reason, clears storage, and bounces to login.
+function handleSessionEnd(reason) {
+  if (sessionEnded) return;          // avoid double-firing from the poll + a click
+  sessionEnded = true;
+  try { if (videoPlaying) { document.getElementById('videoFrame').src = ''; } } catch (e) {}
+  sessionStorage.clear();
+  // Pass a flag so /kreya can show "You were logged out (logged in elsewhere / session expired)".
+  try { sessionStorage.setItem('kreya_v2_kicked', reason || 'Your session has ended.'); } catch (e) {}
+  window.location.href = '/kreya';
 }
 
 async function logout() {
@@ -476,7 +493,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.addEventListener('fullscreenchange', onFsChange);
   document.addEventListener('webkitfullscreenchange', onFsChange);
+  startSessionHeartbeat();
 });
+
+// ══════════════════════════════════════════════════════
+// SESSION HEARTBEAT
+// Polls the server on a timer. If this session was invalidated
+// (logged in elsewhere) or expired (90 min), the 401 from api()
+// triggers handleSessionEnd() → logout + redirect, with NO click
+// or manual refresh needed. This is what makes single-session
+// enforcement actually visible to the other device.
+// ══════════════════════════════════════════════════════
+let heartbeatTimer = null;
+function startSessionHeartbeat() {
+  if (heartbeatTimer) clearInterval(heartbeatTimer);
+  heartbeatTimer = setInterval(async () => {
+    if (sessionEnded) { clearInterval(heartbeatTimer); return; }
+    try {
+      // Lightweight authenticated check; any 401 is handled inside api().
+      if (role === 'admin') {
+        await api('GET', '/admin/lectures');
+      } else {
+        await api('GET', '/student/lectures');
+      }
+    } catch (e) {
+      // api() already handled a 401 via handleSessionEnd(); nothing else to do.
+    }
+  }, 15000); // every 15 seconds
+}
 
 // ══════════════════════════════════════════════════════
 // ADMIN TABS
