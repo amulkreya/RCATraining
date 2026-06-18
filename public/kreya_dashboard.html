@@ -649,13 +649,15 @@ function renderStudentsTab() {
     return;
   }
   wrap.innerHTML = `<table class="data-table">
-    <thead><tr><th>Student</th><th>Lectures</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Student</th><th>Lectures</th><th>Status</th><th>Last Login</th><th>IP Address</th><th>Location</th><th>Actions</th></tr></thead>
     <tbody>
     ${list.map(s => `<tr>
       <td><strong>${esc(s.username)}</strong>${s.full_name?`<br><span style="font-size:12px;color:var(--text3);">${esc(s.full_name)}</span>`:''}</td>
       <td><span class="pill" onclick="openEditStu(${s.id}, '${esc(s.username)}')">${(s.lecture_ids||[]).length} lectures ✏️</span></td>
       <td><span class="status-badge ${s.is_active?'active':'inactive'}"><span class="status-dot"></span>${s.is_active?'Active':'Disabled'}</span></td>
       <td style="font-size:12px;color:var(--text3);">${s.last_login ? new Date(s.last_login).toLocaleDateString('en-IN') : 'Never'}</td>
+      <td style="font-size:12px;color:var(--text3);">${s.last_ip ? esc(s.last_ip) : '—'}</td>
+      <td style="font-size:12px;color:var(--text3);">${s.last_location ? esc(s.last_location) : '—'}</td>
       <td><div class="action-row">
         ${s.is_active
           ? `<button class="btn-sm danger" onclick="toggleStu(${s.id}, false)">Disable</button>`
