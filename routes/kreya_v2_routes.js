@@ -319,10 +319,20 @@ router.get('/api/admin/students', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT s.id, s.username, s.email, s.full_name, s.is_active, s.created_at, s.last_login,
-              ARRAY_AGG(sl.lecture_id) FILTER (WHERE sl.lecture_id IS NOT NULL) AS lecture_ids
+              ARRAY_AGG(sl.lecture_id) FILTER (WHERE sl.lecture_id IS NOT NULL) AS lecture_ids,
+              ls.ip_address  AS last_ip,
+              ls.location    AS last_location
        FROM kreya_students s
        LEFT JOIN kreya_student_lectures sl ON sl.student_id = s.id
-       GROUP BY s.id ORDER BY s.created_at DESC`
+       LEFT JOIN LATERAL (
+         SELECT ip_address, location
+         FROM kreya_student_sessions
+         WHERE student_id = s.id
+         ORDER BY created_at DESC
+         LIMIT 1
+       ) ls ON TRUE
+       GROUP BY s.id, ls.ip_address, ls.location
+       ORDER BY s.created_at DESC`
     );
     res.json({ students: result.rows });
   } catch (err) { res.status(500).json({ error: 'Server error' }); }
