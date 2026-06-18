@@ -29,6 +29,30 @@ function makeToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+// ─── Helper: extract real client IP behind Railway's proxy ──
+function getClientIp(req) {
+  const fwd = req.headers['x-forwarded-for'];
+  if (fwd) return fwd.split(',')[0].trim();
+  return req.socket.remoteAddress;
+}
+
+// ─── Helper: resolve IP → city/region/country (best-effort, never blocks login) ──
+async function lookupLocation(ip) {
+  try {
+    if (!ip || ip === '127.0.0.1' || ip.startsWith('::1') || ip.startsWith('::ffff:127.')) {
+      return 'Localhost';
+    }
+    const r = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country`);
+    const data = await r.json();
+    if (data.status === 'success') {
+      return [data.city, data.regionName, data.country].filter(Boolean).join(', ');
+    }
+  } catch (e) {
+    console.error('[kreya_v2] geo lookup failed:', e.message);
+  }
+  return null;
+}
+
 // ─── Ensure leads table exists (auto-migration, safe/no-op if present) ──
 pool.query(`
   CREATE TABLE IF NOT EXISTS kreya_leads (
@@ -41,6 +65,12 @@ pool.query(`
     created_at TIMESTAMPTZ DEFAULT NOW()
   )
 `).catch(err => console.error('[kreya_v2] leads table init error:', err));
+
+// ─── Ensure session tracking columns exist (auto-migration, safe/no-op if present) ──
+pool.query(`ALTER TABLE kreya_student_sessions ADD COLUMN IF NOT EXISTS ip_address TEXT`)
+  .catch(err => console.error('[kreya_v2] ip_address column init error:', err));
+pool.query(`ALTER TABLE kreya_student_sessions ADD COLUMN IF NOT EXISTS location TEXT`)
+  .catch(err => console.error('[kreya_v2] location column init error:', err));
 
 // ─── Helper: verify admin session ──────────────────────────
 async function requireAdmin(req, res, next) {
@@ -65,7 +95,7 @@ async function requireStudent(req, res, next) {
      WHERE ss.token=$1 AND ss.expires_at > NOW()`,
     [token]
   );
-  if (!result.rows.length) return res.status(401).json({ error: 'Session expired' });
+  if (!result.rows.length) return res.status(401).json({ error: 'Session expired. You may have logged in from another device.' });
   if (!result.rows[0].is_active) return res.status(403).json({ error: 'Account disabled' });
   req.student = result.rows[0];
   next();
@@ -160,13 +190,19 @@ router.post('/api/student/login', async (req, res) => {
     // Update last login
     await pool.query(`UPDATE kreya_students SET last_login=NOW() WHERE id=$1`, [student.id]);
 
-    // Clean expired sessions for this student
-    await pool.query(`DELETE FROM kreya_student_sessions WHERE student_id=$1 AND expires_at < NOW()`, [student.id]);
+    // Capture IP and resolve location (best-effort — never blocks login if lookup fails)
+    const ip = getClientIp(req);
+    const location = await lookupLocation(ip);
+
+    // Remove ALL existing sessions for this student — enforces a single active login.
+    // Any other device/tab still using an old token will get "Session expired" on its next request.
+    await pool.query(`DELETE FROM kreya_student_sessions WHERE student_id=$1`, [student.id]);
 
     const token = makeToken();
     await pool.query(
-      `INSERT INTO kreya_student_sessions(token, student_id, expires_at) VALUES($1,$2, NOW() + INTERVAL '24 hours')`,
-      [token, student.id]
+      `INSERT INTO kreya_student_sessions(token, student_id, expires_at, ip_address, location)
+       VALUES($1, $2, NOW() + INTERVAL '90 minutes', $3, $4)`,
+      [token, student.id, ip, location]
     );
     res.json({ token, role: 'student', username: student.username, fullName: student.full_name });
   } catch (err) {
@@ -289,6 +325,20 @@ router.get('/api/admin/students', requireAdmin, async (req, res) => {
        GROUP BY s.id ORDER BY s.created_at DESC`
     );
     res.json({ students: result.rows });
+  } catch (err) { res.status(500).json({ error: 'Server error' }); }
+});
+
+// GET /kreya/api/admin/students/:id/sessions  → view active/recent session info (IP + location)
+router.get('/api/admin/students/:id/sessions', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT token, created_at, expires_at, ip_address, location
+       FROM kreya_student_sessions
+       WHERE student_id=$1
+       ORDER BY created_at DESC`,
+      [req.params.id]
+    );
+    res.json({ sessions: result.rows });
   } catch (err) { res.status(500).json({ error: 'Server error' }); }
 });
 
