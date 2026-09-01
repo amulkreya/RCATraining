@@ -249,6 +249,24 @@
   .lead-form .btn-submit:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,75,49,0.3); }
   .lead-form .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
+  /* CAPTCHA */
+  .captcha-row { display: flex; align-items: stretch; gap: 12px; }
+  .captcha-question {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 120px; padding: 13px 16px; border: 1.5px solid var(--border);
+    border-radius: var(--radius); background: var(--bg2); color: var(--text);
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; white-space: nowrap; user-select: none;
+  }
+  .captcha-refresh {
+    border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2);
+    border-radius: var(--radius); width: 46px; flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: var(--transition);
+  }
+  .captcha-refresh:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .captcha-refresh svg { width: 18px; height: 18px; fill: currentColor; }
+  .captcha-error { color: var(--accent); font-size: 13px; margin-top: 8px; display: none; font-weight: 500; }
+  .captcha-error.show { display: block; }
+
   .msg {
     background: var(--accent-light); color: var(--accent);
     border: 1px solid rgba(200,75,49,0.2); border-radius: 8px;
@@ -765,7 +783,8 @@
   </div>
 </section>
 
-
+<!-- HOW IT WORKS / WHY US -->
+<section id="why-us" style="background:var(--bg2);">
   <div class="wrap">
     <div class="section-head">
       <div class="section-eyebrow">How It Works</div>
@@ -830,7 +849,7 @@
       </div>
 
       <div class="lead-form">
-        <form id="leadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00D5f000004b9Nu" method="POST" target="hiddenLeadFrame" onsubmit="onLeadSubmit(event)">
+        <form id="leadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00D5f000004b9Nu" method="POST" target="hiddenLeadFrame" onsubmit="return onLeadSubmit(event)">
           <input type="hidden" name="oid" value="00D5f000004b9Nu">
           <input type="hidden" name="retURL" value="https://rcatraining.online/">
           <input type="hidden" name="lead_source" value="Web">
@@ -866,6 +885,21 @@
             <label>Message (optional)</label>
             <textarea name="description" id="leadMessage" placeholder="Tell us about your background or questions…"></textarea>
           </div>
+
+          <!-- MATH CAPTCHA -->
+          <div class="form-group">
+            <label id="captchaLabel">Security Check — solve to submit</label>
+            <div class="captcha-row">
+              <div class="captcha-question" id="captchaQuestion">— + — = ?</div>
+              <input type="text" id="captchaAnswer" inputmode="numeric" autocomplete="off"
+                     placeholder="Answer" required style="flex:1;">
+              <button type="button" class="captcha-refresh" id="captchaRefresh" onclick="generateCaptcha()" title="New question" aria-label="New question">
+                <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+              </button>
+            </div>
+            <div class="captcha-error" id="captchaError">Incorrect answer — please try again.</div>
+          </div>
+
           <button type="submit" class="btn-submit" id="leadSubmitBtn">Submit Enquiry</button>
           <div class="msg" id="leadMsg"></div>
         </form>
@@ -1000,8 +1034,42 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
 });
 
+// ── MATH CAPTCHA ──────────────────────────────────────
+let captchaA = 0, captchaB = 0, captchaOp = '+';
+function generateCaptcha() {
+  captchaA = Math.floor(Math.random() * 10) + 1;   // 1–10
+  captchaB = Math.floor(Math.random() * 10) + 1;   // 1–10
+  // Only + and × so the answer is always a positive whole number
+  captchaOp = Math.random() < 0.5 ? '+' : '×';
+  const q = document.getElementById('captchaQuestion');
+  if (q) q.textContent = captchaA + ' ' + captchaOp + ' ' + captchaB + ' = ?';
+  const ans = document.getElementById('captchaAnswer');
+  if (ans) ans.value = '';
+  const err = document.getElementById('captchaError');
+  if (err) err.classList.remove('show');
+}
+function checkCaptcha() {
+  const expected = captchaOp === '+' ? (captchaA + captchaB) : (captchaA * captchaB);
+  const given = parseInt(document.getElementById('captchaAnswer').value.trim(), 10);
+  return given === expected;
+}
+// Generate the first question on page load
+generateCaptcha();
+
 function onLeadSubmit(e) {
-  // Allow the real form POST to Salesforce (target=hiddenLeadFrame, no navigation)
+  const err = document.getElementById('captchaError');
+
+  // ── CAPTCHA gate ──
+  if (!checkCaptcha()) {
+    e.preventDefault();               // stop the submit to Salesforce
+    if (err) err.classList.add('show');
+    generateCaptcha();                // fresh question after a wrong answer
+    document.getElementById('captchaAnswer').focus();
+    return false;
+  }
+  if (err) err.classList.remove('show');
+
+  // ── original submit flow (posts to Salesforce via hidden iframe) ──
   const btn = document.getElementById('leadSubmitBtn');
   const msg = document.getElementById('leadMsg');
   const form = document.getElementById('leadForm');
@@ -1016,10 +1084,12 @@ function onLeadSubmit(e) {
     msg.classList.remove('show');
     msg.classList.add('show','success');
     form.reset();
+    generateCaptcha();               // fresh question for the next submission
     btn.disabled = false;
     btn.textContent = 'Submit Enquiry';
   };
   // form submits normally (not prevented) — posts to Salesforce in hidden iframe
+  return true;
 }
 </script>
 </body>
